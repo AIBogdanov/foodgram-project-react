@@ -15,6 +15,8 @@ class Ingredient(models.Model):
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         ordering = ('name',)
+        models.UniqueConstraint(fields=['name', 'measurement_unit'],
+                                name='unique_ingredient')
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
@@ -118,6 +120,7 @@ class IngredientRecipe(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
     )
+
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'

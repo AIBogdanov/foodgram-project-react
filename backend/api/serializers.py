@@ -16,7 +16,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(write_only=True)
+    id = serializers.PrimaryKeyRelatedField(read_only=True)
     amount = serializers.IntegerField(
         write_only=True, validators=[validate_zero]
     )
@@ -52,7 +52,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def add_ingredients(self, recipe, ingredients):
         for ingridient in ingredients:
-            IngredientRecipe.objects.get_or_create(
+            IngredientRecipe.objects.bulk_create(
                 ingredient_id=ingridient.get('id'),
                 amount=ingridient.get('amount'),
                 recipe=recipe
@@ -80,11 +80,16 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
 class RecipeReadSerializer(RecipeWriteSerializer):
     author = UserAuthSerializer(read_only=True)
-    ingredients = serializers.SerializerMethodField()
+    ingredients = serializers.SerializerMethodField(
+        method_name='ingredients'
+    )
     image = Base64ImageField()
     tags = TagSerializer(read_only=True, many=True)
-    is_favorited = serializers.SerializerMethodField(read_only=True)
-    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
+    is_favorited = serializers.SerializerMethodField(
+        read_only=True, method_name='is_favorited'
+    )
+    is_in_shopping_cart = serializers.SerializerMethodField(
+        read_only=True, method_name='is_in_shopping_cart')
 
     def get_ingredients(self, obj):
         return obj.ingredients.values(

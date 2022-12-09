@@ -150,3 +150,4 @@ DJOSER = {
         'current_user': 'api.user_serializer.UserAuthSerializer',
     }
 }
+# PAGINATION_SIZE = 6

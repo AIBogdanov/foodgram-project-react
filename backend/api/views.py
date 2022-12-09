@@ -67,7 +67,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         user = request.user
         filename = f'{user.username}_shopping_list.txt'
         recipes_in_cart = user.shopping_cart.all()
-        ingredients = IngredientRecipe.objects.filter(
+        ingredients = IngredientRecipe.objects.select_related(
             recipe__in=recipes_in_cart
         ).values(
             'ingredient__name', 'ingredient__measurement_unit'

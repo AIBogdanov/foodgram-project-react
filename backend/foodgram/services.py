@@ -1,8 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 
-# from foodgram.settings import PAGINATION_SIZE
-
 PAGINATION_SIZE = 6
 
 
