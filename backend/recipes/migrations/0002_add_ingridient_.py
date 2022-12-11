@@ -6,7 +6,7 @@ INGREDIENTS = open('../data/ingredients.json')
 
 
 def add_ingridient(apps, schema_editor):
-    Ingridient = apps.get_model('recipe', 'ingredient')
+    Ingridient = apps.get_model('Ingredient')
     for ingredient in INGREDIENTS:
         new_ingredient = Ingridient(**ingredient)
         new_ingredient.save()
