@@ -86,18 +86,17 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(RecipeWriteSerializer):
     author = UserAuthSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField(
-        many=True,
-        # method_name='ingredients'
+        method_name='ingredients'
     )
     image = Base64ImageField()
     tags = TagSerializer(read_only=True, many=True)
     is_favorited = serializers.SerializerMethodField(
         read_only=True,
-        #  method_name='is_favorited'
+        method_name='is_favorited'
     )
     is_in_shopping_cart = serializers.SerializerMethodField(
         read_only=True,
-        # method_name='is_in_shopping_cart'
+        method_name='is_in_shopping_cart'
         )
 
     def get_ingredients(self, obj):
@@ -121,3 +120,7 @@ class RecipeReadSerializer(RecipeWriteSerializer):
         if user.is_authenticated:
             return user.shopping_cart.filter(pk=obj.pk).exists()
         return False
+
+    class Meta:
+        model = Recipe
+        exclude = ('slug', 'pub_date')
