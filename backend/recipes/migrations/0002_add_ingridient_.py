@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-INGREDIENTS = open('../data/ingredients.json')
+INGREDIENTS = open('./data/ingredients.json')
 
 
 def add_ingridient(apps, schema_editor):
