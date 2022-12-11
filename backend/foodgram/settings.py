@@ -131,7 +131,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
 
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.LimitPageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 6
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -150,4 +151,3 @@ DJOSER = {
         'current_user': 'api.user_serializer.UserAuthSerializer',
     }
 }
-# PAGINATION_SIZE = 6

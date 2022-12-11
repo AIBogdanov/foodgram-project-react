@@ -24,14 +24,14 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (SearchFilter, DjangoFilterBackend)
     search_fields = ('^name',)
     filterset_class = IngredientFilter
-    pagination_class = None
+    # pagination_class = None
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
-    pagination_class = None
+    # pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
