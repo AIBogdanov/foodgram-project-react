@@ -11,7 +11,8 @@ from recipes.models import Ingredient, Recipe, Tag
 from .permissions import AuthPostAuthorChangesOrReadOnly
 from .serializers import (
     IngredientRecipe, IngredientSerializer,
-    RecipeReadSerializer, RecipeWriteSerializer,
+    # RecipeReadSerializer, 
+    RecipeWriteSerializer,
     TagSerializer
 )
 from .services import add_or_del_obj, create_shopping_list
