@@ -17,8 +17,9 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
-    amount = serializers.IntegerField(
-        write_only=True, validators=[validate_zero]
+    amount = serializers.DecimalField(
+        write_only=True, validators=[validate_zero],
+        decimal_places=3
     )
 
     class Meta:
@@ -81,6 +82,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(RecipeWriteSerializer):
     author = UserAuthSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField(
+        many=True,
         # method_name='ingredients'
     )
     image = Base64ImageField()
