@@ -86,7 +86,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(RecipeWriteSerializer):
     author = UserAuthSerializer(read_only=True)
     ingredients = serializers.SerializerMethodField(
-        method_name='ingredients'
+        method_name='ingredients',
+        read_only=True
     )
     image = Base64ImageField()
     tags = TagSerializer(read_only=True, many=True)
