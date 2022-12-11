@@ -17,9 +17,13 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
+    name = serializers.ReadOnlyField(source='ingredient.name')
     amount = serializers.DecimalField(
         write_only=True, validators=[validate_zero],
         decimal_places=3
+    )
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
     )
 
     class Meta:
@@ -97,10 +101,14 @@ class RecipeReadSerializer(RecipeWriteSerializer):
         )
 
     def get_ingredients(self, obj):
-        return obj.ingredients.values(
-            'id', 'name', 'measurement_unit',
-            amount=F('ingredient_recipe__amount')
-        )
+        return IngredientRecipeSerializer(
+            IngredientRecipe.objects.filter(recipe=obj).all(),
+            many=True
+        ).data
+        # obj.ingredients.values(
+        #     'id', 'name', 'measurement_unit',
+        #     amount=F('ingredient_recipe__amount')
+        # )
 
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
