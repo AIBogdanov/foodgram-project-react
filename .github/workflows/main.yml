@@ -66,20 +66,8 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo DEBUG=${{ secrets.DEBUG }} >> .env
             sudo docker-compose up -d
-            # sudo docker-compose exec -T web python manage.py migrate --noinput
-            sudo docker-compose exec -T web python manage.py collectstatic --no-input
-
-#             cd /home/root/foodgram-project-react
-#             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram:latest
-#             sudo docker-compose stop
-#             sudo docker-compose rm db
-#             sudo docker-compose rm nginx
-#             sudo docker-compose up -d
-#             sudo docker-compose exec -T web python manage.py makemigrations --noinput
-#             sudo docker-compose exec -T web python manage.py migrate --noinput
-#             sudo docker-compose exec -T web python manage.py loaddata -i data/ingredients.json
-#             sudo docker-compose exec -T web python manage.py collectstatic --no-input
-#             # sudo docker-compose exec -T web python manage.py createsuperuser --noinput --username=DJANGO_SUPERUSER_USERNAME --email=DJANGO_SUPERUSER_EMAIL
+            sudo docker-compose exec web python manage.py migrate
+            sudo docker-compose exec web python manage.py collectstatic --no-input
   
   send_message:
     runs-on: ubuntu-latest
