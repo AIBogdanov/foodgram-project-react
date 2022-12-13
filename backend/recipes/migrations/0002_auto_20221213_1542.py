@@ -1,9 +1,9 @@
 from django.db import migrations
-import json
+from json import load
 
 
 with open('./data/ingredients.json', encoding="utf-8") as json_file:
-    INGREDIENTS = json.load(json_file)
+    INGREDIENTS = load(json_file)
 
 
 def add_ingridient(apps, schema_editor):
