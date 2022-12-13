@@ -66,70 +66,13 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo DEBUG=${{ secrets.DEBUG }} >> .env
             sudo docker-compose up -d
-            sudo docker-compose exec -T web python manage.py migrate --noinput
+            # sudo docker-compose exec -T web python manage.py migrate --noinput
             sudo docker-compose exec -T web python manage.py collectstatic --no-input
 
-      # if: github.ref == 'refs/heads/master'
-      # steps:
-      # - uses: actions/checkout@v2
-      # - name: Set up Python
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: 3.9
-
-#       - name: Install dump-env and create .env
-#         env:
-#           SECRET_DB_ENGINE: ${{ secrets.DB_ENGINE }}
-#           SECRET_DB_NAME: ${{ secrets.DB_NAME }}
-#           SECRET_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-#           SECRET_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-#           SECRET_DB_HOST: ${{ secrets.DB_HOST }}
-#           SECRET_DB_PORT: ${{ secrets.DB_PORT }}
-#           SECRET_SECRET_KEY: ${{ secrets.SECRET_KEY }}
-# #          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
-# #          SECRET_DJANGO_SUPERUSER_USERNAME: ${{ secrets.DJANGO_SUPERUSER_USERNAME }}
-# #          SECRET_DJANGO_SUPERUSER_EMAIL: ${{ secrets.DJANGO_SUPERUSER_EMAIL }}
-# #          SECRET_DJANGO_SUPERUSER_PASSWORD: ${{ secrets.DJANGO_SUPERUSER_PASSWORD }}
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install dump-env
-#           dump-env --template=infra/.env.template --prefix='SECRET_' > infra/.env
-#       - name: Copy default.conf via ssh
-#         uses: appleboy/scp-action@master
-#         with:
-#           host: ${{ secrets.HOST }}
-#           username: ${{ secrets.USER }}
-#           password: ${{ secrets.SSH_PASS }}
-#           port: ${{ secrets.PORT }}
-#           source: "infra/nginx/default.conf"
-#           target: "/home/root/foodgram-project-react/nginx"
-#           strip_components: 2
-          
-#       - name: Copy docker-compose.yaml via ssh
-#         uses: appleboy/scp-action@master
-#         with:
-#           host: ${{ secrets.HOST }}
-#           username: ${{ secrets.USER }}
-#           password: ${{ secrets.SSH_PASS }}
-#           port: ${{ secrets.PORT }}
-#           source: "infra/docker-compose.yaml, infra/.env"
-#           target: "/home/root/foodgram-project-react"
-#           strip_components: 1
-
-#       - name: executing remote ssh commands to deploy
-#         uses: appleboy/ssh-action@master
-#         with:
-#           host: ${{ secrets.HOST }}
-#           username: ${{ secrets.USER }}
-#           password: ${{ secrets.SSH_PASS }}
-#           # key: ${{ secrets.SSH_KEY }}
-#           script: |
-#             sudo nginx -s stop
-#             cd ~
 #             cd /home/root/foodgram-project-react
 #             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram:latest
 #             sudo docker-compose stop
-#             sudo docker-compose rm web
+#             sudo docker-compose rm db
 #             sudo docker-compose rm nginx
 #             sudo docker-compose up -d
 #             sudo docker-compose exec -T web python manage.py makemigrations --noinput
