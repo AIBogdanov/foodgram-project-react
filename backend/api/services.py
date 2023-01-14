@@ -1,32 +1,45 @@
-from rest_framework import status
-from rest_framework.response import Response
+from string import hexdigits
 
-# from foodgram.settings import PAGINATION_SIZE
+from recipes.models import AmountIngredient
 
-PAGINATION_SIZE = 6
+from rest_framework.serializers import ValidationError
 
 
-def add_or_del_obj(pk, request, param, data_for_validate):
-    obj_bool = param.fi
-    if request.method == 'DELETE' and obj_bool:
-        param.clear()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    if request.method == 'POST' and not obj_bool:
-        param.add(pk)
-        serialize = data_for_validate(
-            param.get(pk=pk),
-            context={'request': request}
+def recipe_amount_ingredients_set(recipe, ingredients):
+    for ingredient in ingredients:
+        AmountIngredient.objects.get_or_create(
+            recipe=recipe,
+            ingredients=ingredient['ingredient'],
+            amount=ingredient['amount']
         )
-        return Response(serialize.data, status=status.HTTP_201_CREATED)
-    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-def create_shopping_list(ingredients):
-    text_list = ['Список необходимых ингредиентов:\n']
-    text_list += [
-        f'{ingredient.get("ingredient__name").capitalize()} '
-        f'({ingredient.get("ingredient__measurement_unit")}) - '
-        f'{ingredient.get("sum_amount")}\n'
-        for ingredient in list(ingredients)
-    ]
-    return text_list
+def check_value_validate(value, klass=None):
+    if not str(value).isdecimal():
+        raise ValidationError(
+            f'{value} должно содержать цифру'
+        )
+    if klass:
+        obj = klass.objects.filter(id=value)
+        if not obj:
+            raise ValidationError(
+                f'{value} не существует'
+            )
+        return obj[0]
+
+
+def is_hex_color(value):
+    if len(value) not in (3, 6):
+        raise ValidationError(
+            f'{value} не правильной длины ({len(value)}).'
+        )
+    if not set(value).issubset(hexdigits):
+        raise ValidationError(
+            f'{value} не шестнадцатиричное.'
+        )
+
+
+incorrect_layout = str.maketrans(
+    'qwertyuiop[]asdfghjkl;\'zxcvbnm,./',
+    'йцукенгшщзхъфывапролджэячсмитьбю.'
+)

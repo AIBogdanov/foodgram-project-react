@@ -1,55 +1,70 @@
-from django.contrib import admin
-from .models import Ingredient, IngredientRecipe, Recipe, Tag
+from django.contrib.admin import ModelAdmin, StackedInline, register, site
+from django.utils.safestring import mark_safe
 
-EMPTY = '-пусто-'
+from .models import AmountIngredient, Ingredient, Recipe, Tag
 
-
-class IngredientInline(admin.TabularInline):
-    model = IngredientRecipe
-
-
-@admin.register(IngredientRecipe)
-class IngredientRecipe(admin.ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'amount')
-    empty_value_display = EMPTY
-    search_fields = ('ingredient__name',)
+site.site_header = 'Администрирование Foodgram'
+EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
 
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
+class IngredientInline(StackedInline):
+    model = AmountIngredient
+    extra = 2
+
+
+@register(Ingredient)
+class IngredientAdmin(ModelAdmin):
     list_display = (
-        'name', 'image', 'cooking_time', 'author', 'get_ingredients',
-        'get_tags', 'favorites_count', 'shopping_cart_count'
+        'name', 'measurement_unit',
     )
-    inlines = (IngredientInline,)
-    empty_value_display = EMPTY
-    list_filter = ('author', 'tags')
     search_fields = (
-        'name', 'author__username', 'tags__name', 'ingredients__name'
+        'name',
+    )
+    list_filter = (
+        'name',
     )
 
-    def get_ingredients(self, obj):
-        return ', '.join(list(obj.ingredients.values_list('name', flat=True)))
-
-    def get_tags(self, obj):
-        return obj.tags.values_list('name', flat=True)
-
-    def favorites_count(self, obj):
-        return obj.favorites.count()
-
-    def shopping_cart_count(self, obj):
-        return obj.shopping_cart.count()
+    # save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
 
-@admin.register(Ingredient)
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'measurement_unit')
-    empty_value_display = EMPTY
-    search_fields = ('name', 'measurement_unit')
+@register(Recipe)
+class RecipeAdmin(ModelAdmin):
+    list_display = (
+        'name', 'author', 'get_image',
+    )
+    fields = (
+        ('name', 'cooking_time',),
+        ('author', 'tags',),
+        ('text',),
+        ('image',),
+    )
+    raw_id_fields = ('author', )
+    search_fields = (
+        'name', 'author',
+    )
+    list_filter = (
+        'name', 'author__username',
+    )
+
+    inlines = (IngredientInline,)
+    # save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
+
+    get_image.short_description = 'Изображение'
 
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'slug')
-    empty_value_display = EMPTY
-    search_fields = ('name', 'color', 'slug')
+@register(Tag)
+class TagAdmin(ModelAdmin):
+    list_display = (
+        'name', 'color', 'slug',
+    )
+    search_fields = (
+        'name', 'color'
+    )
+
+    # save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY

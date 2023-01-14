@@ -1,31 +1,36 @@
-from django import forms
+# from django.contrib.admin import register
+# from django.contrib.auth.admin import UserAdmin
+
+# from .models import MyUser
+
+
+# @register(MyUser)
+# class MyUserAdmin(UserAdmin):
+#     list_display = (
+#         'username', 'first_name', 'last_name', 'email',
+#     )
+#     fields = (
+#         ('username', 'email', ),
+#         ('first_name', 'last_name', ),
+#     )
+#     fieldsets = []
+
+#     search_fields = (
+#         'username', 'email',
+#     )
+#     list_filter = (
+#         'first_name', 'email',
+#     )
+#     save_on_top = True
 from django.contrib import admin
 
-from .models import User
+from .models import MyUser
 
-EMPTY = '-пусто-'
-
-
-class UserAdminForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(UserAdminForm, self).__init__(*args, **kwargs)
-        self.fields['password'].widget = forms.PasswordInput()
-
-    class Meta:
-        model = User
-        fields = '__all__'
-
-
-@admin.register(User)
+@admin.register(MyUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
-        'username', 'email', 'first_name', 'last_name',
-        'is_superuser', 'is_staff', 'date_joined', 'followers_count',
-    )
-    empty_value_display = EMPTY
-    form = UserAdminForm
-    search_fields = ('email', 'username')
-    readonly_fields = ('date_joined', 'last_login')
-
-    def followers_count(self, obj):
-        return obj.followers.count()
+        'id', 'username', 'email',
+        'first_name', 'last_name')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
+    list_filter = ('first_name', 'email')
+    empty_value_display = "Данные отсутствуют"
