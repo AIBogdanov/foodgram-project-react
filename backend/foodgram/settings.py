@@ -21,7 +21,7 @@ ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-SQLITE = True
+SQLITE = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
