@@ -68,8 +68,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
             stw_queryset.extend(
                 [i for i in cnt_queryset if i not in stw_queryset]
             )
-            queryset = stw_queryset
-        return queryset
+        return stw_queryset
 
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
@@ -105,7 +104,6 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             queryset = queryset.filter(favorite=user.id)
         if is_favorited in conf.SYMBOL_FALSE_SEARCH:
             queryset = queryset.exclude(favorite=user.id)
-
         return queryset
 
     @action(methods=conf.ACTION_METHODS, detail=True)
