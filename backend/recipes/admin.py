@@ -23,8 +23,6 @@ class IngredientAdmin(ModelAdmin):
     list_filter = (
         'name',
     )
-
-    # save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
 
 
@@ -48,7 +46,6 @@ class RecipeAdmin(ModelAdmin):
     )
 
     inlines = (IngredientInline,)
-    # save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
 
     def get_image(self, obj):
@@ -65,6 +62,4 @@ class TagAdmin(ModelAdmin):
     search_fields = (
         'name', 'color'
     )
-
-    # save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY

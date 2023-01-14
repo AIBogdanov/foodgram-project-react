@@ -171,9 +171,6 @@ class RecipeSerializer(ModelSerializer):
                     f'"{value}" должен быть в формате "[]"'
                 )
 
-        # for tag in tags:
-        #     check_value_validate(tag, Tag)
-
         valid_ingredients = []
         for ing in ingredients:
             ing_id = ing.get('id')
