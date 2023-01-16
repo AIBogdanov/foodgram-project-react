@@ -10,15 +10,6 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
 from users.models import User
 
 
-class RecipeShortSerializer(serializers.ModelSerializer):
-    """ Сериализатор полей избранных рецептов и покупок """
-
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time'),
-        read_only_fields = '__all__',
-
-
 class UserSerializer(UserSerializer):
     """ Сериализатор пользователя """
     is_subscribed = SerializerMethodField(read_only=True)
@@ -47,22 +38,12 @@ class UserCreateSerializer(UserCreateSerializer):
 
 class SubscribeListSerializer(UserSerializer):
     """ Сериализатор для получения подписок """
-    recipes_count = RecipeShortSerializer(many=True, read_only=True)
+    recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
 
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed',
-            'recipes',
-            'recipes_count',
-        )
-        read_only_fields = '__all__',
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ('recipes_count', 'recipes')
+        read_only_fields = ('email', 'username', 'first_name', 'last_name')
 
     def validate(self, data):
         author_id = self.context.get(
@@ -81,11 +62,17 @@ class SubscribeListSerializer(UserSerializer):
             )
         return data
 
-    def get_is_subscribed(*args):
-        return True
-
     def get_recipes_count(self, obj):
         return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = obj.recipes.all()
+        if limit:
+            recipes = recipes[: int(limit)]
+        serializer = RecipeShortSerializer(recipes, many=True, read_only=True)
+        return serializer.data
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -236,6 +223,14 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         return RecipeReadSerializer(instance, context={
             'request': self.context.get('request')
         }).data
+
+
+class RecipeShortSerializer(serializers.ModelSerializer):
+    """ Сериализатор полей избранных рецептов и покупок """
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
