@@ -22,7 +22,7 @@ class Tag(Model):
     )
     color = CharField(
         verbose_name='Цветовой HEX-код',
-        max_length=6,
+        # max_length=6,
         blank=True,
         null=True,
         default='FF',
@@ -42,10 +42,10 @@ class Tag(Model):
                 check=Q(name__length__gt=0),
                 name='\n%(app_label)s_%(class)s_name is empty\n',
             ),
-            CheckConstraint(
-                check=Q(color__length__gt=0),
-                name='\n%(app_label)s_%(class)s_color is empty\n',
-            ),
+            # CheckConstraint(
+            #     check=Q(color__length__gt=0),
+            #     name='\n%(app_label)s_%(class)s_color is empty\n',
+            # ),
             CheckConstraint(
                 check=Q(slug__length__gt=0),
                 name='\n%(app_label)s_%(class)s_slug is empty\n',
