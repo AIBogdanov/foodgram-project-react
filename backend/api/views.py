@@ -72,39 +72,39 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet, AddDelViewMixin):
-    queryset = Recipe.objects.select_related('author')
+    queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
     pagination_class = PageLimitPagination
     add_serializer = ShortRecipeSerializer
 
-    def get_queryset(self):
-        queryset = self.queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
 
-        tags = self.request.query_params.getlist(conf.TAGS)
-        if tags:
-            queryset = queryset.filter(
-                tags__slug__in=tags).distinct()
+    #     tags = self.request.query_params.getlist(conf.TAGS)
+    #     if tags:
+    #         queryset = queryset.filter(
+    #             tags__slug__in=tags).distinct()
 
-        author = self.request.query_params.get(conf.AUTHOR)
-        if author:
-            queryset = queryset.filter(author=author)
-        user = self.request.user
-        if user.is_anonymous:
-            return queryset
+    #     author = self.request.query_params.get(conf.AUTHOR)
+    #     if author:
+    #         queryset = queryset.filter(author=author)
+    #     user = self.request.user
+    #     if user.is_anonymous:
+    #         return queryset
 
-        is_in_shopping = self.request.query_params.get(conf.SHOP_CART)
-        if is_in_shopping in conf.SYMBOL_TRUE_SEARCH:
-            queryset = queryset.filter(cart=user.id)
-        elif is_in_shopping in conf.SYMBOL_FALSE_SEARCH:
-            queryset = queryset.exclude(cart=user.id)
+    #     is_in_shopping = self.request.query_params.get(conf.SHOP_CART)
+    #     if is_in_shopping in conf.SYMBOL_TRUE_SEARCH:
+    #         queryset = queryset.filter(cart=user.id)
+    #     elif is_in_shopping in conf.SYMBOL_FALSE_SEARCH:
+    #         queryset = queryset.exclude(cart=user.id)
 
-        is_favorited = self.request.query_params.get(conf.FAVORITE)
-        if is_favorited in conf.SYMBOL_TRUE_SEARCH:
-            queryset = queryset.filter(favorite=user.id)
-        if is_favorited in conf.SYMBOL_FALSE_SEARCH:
-            queryset = queryset.exclude(favorite=user.id)
-        return queryset
+    #     is_favorited = self.request.query_params.get(conf.FAVORITE)
+    #     if is_favorited in conf.SYMBOL_TRUE_SEARCH:
+    #         queryset = queryset.filter(favorite=user.id)
+    #     if is_favorited in conf.SYMBOL_FALSE_SEARCH:
+    #         queryset = queryset.exclude(favorite=user.id)
+    #     return queryset
 
     @action(methods=conf.ACTION_METHODS, detail=True)
     def favorite(self, request, pk):
