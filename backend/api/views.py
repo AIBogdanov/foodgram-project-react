@@ -155,7 +155,10 @@ class UserViewSet(UserViewSet):
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        permission_classes=[IsAuthenticated],
+        methods=['post', 'delete', 'get'],)
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
