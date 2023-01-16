@@ -1,27 +1,27 @@
-import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+from decouple import Csv, config
 
-ENV_PATH = Path('../infra') / '.env'
+# Eсли true то будет использована прилагаемая база SQLite c записанными данными
+REVIEW = 0
 
-load_dotenv(dotenv_path=ENV_PATH)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', default='0-(-x-=6(6j3ehw)_xv2t^8$%y4qolbbh0q9&ar#42x%))fb!&')
+SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-DEBUG = True
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ['http://localhost:81', 'http://127.0.0.1:81', 'http://158.160.25.222']
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost:81 http://127.0.0.1:8000',
+    cast=Csv()
+)
 
 ROOT_URLCONF = 'foodgram.urls'
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
-
-SQLITE = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,25 +66,22 @@ TEMPLATES = [
     },
 ]
 
-if SQLITE:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': config(
+            'DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config(
+            'DB_NAME', default='postgres'),
+        'USER': config(
+            'POSTGRES_USER', default='postgres'),
+        'PASSWORD': config(
+            'POSTGRES_PASSWORD', default='password'),
+        'HOST': config(
+            'DB_HOST', default='db'),
+        'PORT': config(
+            'DB_PORT', default=5432, cast=int)
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-            'NAME': os.getenv('DB_NAME', default='postgres'),
-            'USER': os.getenv('POSTGRES_USER', default='postgres'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-            'HOST': os.getenv('DB_HOST', default='db'),
-            'PORT': os.getenv('DB_PORT', default='5432')
-        }
-    }
-
+}
 
 AUTH_USER_MODEL = 'users.MyUser'
 
@@ -129,12 +126,21 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / STATIC_URL
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# PASSWORD_RESET_TIMEOUT = 60 * 60
+PASSWORD_RESET_TIMEOUT = 60 * 60
+
+# for review
+if REVIEW:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': str(BASE_DIR / 'db.sqlite3'),
+        }
+    }

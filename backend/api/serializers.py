@@ -47,10 +47,13 @@ class UserSerializer(ModelSerializer):
 
     def get_is_subscribed(self, obj):
         """Проверка подписки пользователей.
+
         Определяет - подписан ли текущий пользователь
         на просматриваемого пользователя.
+
         Args:
             obj (User): Пользователь, на которого проверяется подписка.
+
         Returns:
             bool: True, если подписка есть. Во всех остальных случаях False.
         """
@@ -61,8 +64,10 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data):
         """ Создаёт нового пользователя с запрошенными полями.
+
         Args:
             validated_data (dict): Полученные проверенные данные.
+
         Returns:
             User: Созданный пользователь.
         """
@@ -78,11 +83,14 @@ class UserSerializer(ModelSerializer):
 
     def validate_username(self, username):
         """Проверяет введённый юзернейм.
+
         Args:
             username (str): Введёный пользователем юзернейм.
+
         Raises:
             ValidationError: Некорректная длина юзернейма.
             ValidationError: Юзернейм содержит не только буквы.
+
         Returns:
             str: Юзернейм.
         """
@@ -120,8 +128,10 @@ class UserSubscribeSerializer(UserSerializer):
 
     def get_is_subscribed(*args):
         """Проверка подписки пользователей.
+
         Переопределённый метод родительского класса для уменьшения нагрузки,
         так как в текущей реализации всегда вернёт `True`.
+
         Returns:
             bool: True
         """
@@ -129,8 +139,10 @@ class UserSubscribeSerializer(UserSerializer):
 
     def get_recipes_count(self, obj):
         """ Показывает общее количество рецептов у каждого автора.
+
         Args:
             obj (User): Запрошенный пользователь.
+
         Returns:
             int: Количество рецептов созданных запрошенным пользователем.
         """
@@ -147,8 +159,10 @@ class TagSerializer(ModelSerializer):
 
     def validate_color(self, color):
         """Проверяет и нормализует код цвета.
+
         Args:
             color (str): Строка описывающая код цвета.
+
         Returns:
             str: Проверенная строка описывающая цвет в HEX-формате (#12AB98).
         """
@@ -197,8 +211,10 @@ class RecipeSerializer(ModelSerializer):
 
     def get_ingredients(self, obj):
         """Получает список ингридиентов для рецепта.
+
         Args:
             obj (Recipe): Запрошенный рецепт.
+
         Returns:
             list: Список ингридиентов в рецепте.
         """
@@ -209,8 +225,10 @@ class RecipeSerializer(ModelSerializer):
 
     def get_is_favorited(self, obj):
         """Проверка - находится ли рецепт в избранном.
+
         Args:
             obj (Recipe): Переданный для проверки рецепт.
+
         Returns:
             bool: True - если рецепт в `избранном`
             у запращивающего пользователя, иначе - False.
@@ -222,8 +240,10 @@ class RecipeSerializer(ModelSerializer):
 
     def get_is_in_shopping_cart(self, obj):
         """Проверка - находится ли рецепт в списке  покупок.
+
         Args:
             obj (Recipe): Переданный для проверки рецепт.
+
         Returns:
             bool: True - если рецепт в `списке покупок`
             у запращивающего пользователя, иначе - False.
@@ -235,10 +255,13 @@ class RecipeSerializer(ModelSerializer):
 
     def validate(self, data):
         """Проверка вводных данных при создании/редактировании рецепта.
+
         Args:
             data (dict): Вводные данные.
+
         Raises:
             ValidationError: Тип данных несоответствует ожидаемому.
+
         Returns:
             dict: Проверенные данные.
         """
@@ -276,8 +299,10 @@ class RecipeSerializer(ModelSerializer):
 
     def create(self, validated_data):
         """Создаёт рецепт.
+
         Args:
             validated_data (dict): Данные для создания рецепта.
+
         Returns:
             Recipe: Созданый рецепт.
         """
@@ -291,9 +316,11 @@ class RecipeSerializer(ModelSerializer):
 
     def update(self, recipe, validated_data):
         """Обновляет рецепт.
+
         Args:
             recipe (Recipe): Рецепт для изменения.
             validated_data (dict): Изменённые данные.
+
         Returns:
             Recipe: Обновлённый рецепт.
         """

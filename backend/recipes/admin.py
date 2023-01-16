@@ -1,4 +1,4 @@
-from django.contrib.admin import ModelAdmin, StackedInline, register, site
+from django.contrib.admin import ModelAdmin, TabularInline, register, site
 from django.utils.safestring import mark_safe
 
 from .models import AmountIngredient, Ingredient, Recipe, Tag
@@ -7,10 +7,14 @@ site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
 
-class IngredientInline(StackedInline):
+class IngredientInline(TabularInline):
     model = AmountIngredient
     extra = 2
-    min_num = 1
+
+
+@register(AmountIngredient)
+class LinksAdmin(ModelAdmin):
+    pass
 
 
 @register(Ingredient)
@@ -24,6 +28,8 @@ class IngredientAdmin(ModelAdmin):
     list_filter = (
         'name',
     )
+
+    save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
 
 
@@ -47,6 +53,7 @@ class RecipeAdmin(ModelAdmin):
     )
 
     inlines = (IngredientInline,)
+    save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
 
     def get_image(self, obj):
@@ -63,4 +70,6 @@ class TagAdmin(ModelAdmin):
     search_fields = (
         'name', 'color'
     )
+
+    save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
