@@ -17,6 +17,9 @@ User = get_user_model()
 
 
 class ShortRecipeSerializer(ModelSerializer):
+    """Сериализатор для модели Recipe.
+    Определён укороченный набор полей для некоторых эндпоинтов.
+    """
     class Meta:
         model = Recipe
         fields = 'id', 'name', 'image', 'cooking_time'
@@ -24,6 +27,8 @@ class ShortRecipeSerializer(ModelSerializer):
 
 
 class UserSerializer(ModelSerializer):
+    """Сериализатор для использования с моделью User.
+    """
     is_subscribed = SerializerMethodField()
 
     class Meta:
@@ -41,12 +46,26 @@ class UserSerializer(ModelSerializer):
         read_only_fields = 'is_subscribed',
 
     def get_is_subscribed(self, obj):
+        """Проверка подписки пользователей.
+        Определяет - подписан ли текущий пользователь
+        на просматриваемого пользователя.
+        Args:
+            obj (User): Пользователь, на которого проверяется подписка.
+        Returns:
+            bool: True, если подписка есть. Во всех остальных случаях False.
+        """
         user = self.context.get('request').user
         if user.is_anonymous or (user == obj):
             return False
         return user.subscribe.filter(id=obj.id).exists()
 
     def create(self, validated_data):
+        """ Создаёт нового пользователя с запрошенными полями.
+        Args:
+            validated_data (dict): Полученные проверенные данные.
+        Returns:
+            User: Созданный пользователь.
+        """
         user = User(
             email=validated_data['email'],
             username=validated_data['username'],
@@ -58,6 +77,15 @@ class UserSerializer(ModelSerializer):
         return user
 
     def validate_username(self, username):
+        """Проверяет введённый юзернейм.
+        Args:
+            username (str): Введёный пользователем юзернейм.
+        Raises:
+            ValidationError: Некорректная длина юзернейма.
+            ValidationError: Юзернейм содержит не только буквы.
+        Returns:
+            str: Юзернейм.
+        """
         if len(username) < MIN_USERNAME_LENGTH:
             raise ValidationError(
                 'Длина username допустима от '
@@ -71,6 +99,8 @@ class UserSerializer(ModelSerializer):
 
 
 class UserSubscribeSerializer(UserSerializer):
+    """Сериализатор вывода авторов на которых подписан текущий пользователь.
+    """
     recipes = ShortRecipeSerializer(many=True, read_only=True)
     recipes_count = SerializerMethodField()
 
@@ -89,25 +119,47 @@ class UserSubscribeSerializer(UserSerializer):
         read_only_fields = '__all__',
 
     def get_is_subscribed(*args):
+        """Проверка подписки пользователей.
+        Переопределённый метод родительского класса для уменьшения нагрузки,
+        так как в текущей реализации всегда вернёт `True`.
+        Returns:
+            bool: True
+        """
         return True
 
     def get_recipes_count(self, obj):
+        """ Показывает общее количество рецептов у каждого автора.
+        Args:
+            obj (User): Запрошенный пользователь.
+        Returns:
+            int: Количество рецептов созданных запрошенным пользователем.
+        """
         return obj.recipes.count()
 
 
 class TagSerializer(ModelSerializer):
+    """Сериализатор для вывода тэгов.
+    """
     class Meta:
         model = Tag
         fields = '__all__'
         read_only_fields = '__all__',
 
     def validate_color(self, color):
+        """Проверяет и нормализует код цвета.
+        Args:
+            color (str): Строка описывающая код цвета.
+        Returns:
+            str: Проверенная строка описывающая цвет в HEX-формате (#12AB98).
+        """
         color = str(color).strip(' #')
         is_hex_color(color)
         return f'#{color}'
 
 
 class IngredientSerializer(ModelSerializer):
+    """Сериализатор для вывода ингридиентов.
+    """
     class Meta:
         model = Ingredient
         fields = '__all__'
@@ -115,6 +167,8 @@ class IngredientSerializer(ModelSerializer):
 
 
 class RecipeSerializer(ModelSerializer):
+    """Сериализатор для рецептов.
+    """
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
     ingredients = SerializerMethodField()
@@ -142,24 +196,52 @@ class RecipeSerializer(ModelSerializer):
         )
 
     def get_ingredients(self, obj):
+        """Получает список ингридиентов для рецепта.
+        Args:
+            obj (Recipe): Запрошенный рецепт.
+        Returns:
+            list: Список ингридиентов в рецепте.
+        """
         ingredients = obj.ingredients.values(
             'id', 'name', 'measurement_unit', amount=F('recipe__amount')
         )
         return ingredients
 
     def get_is_favorited(self, obj):
+        """Проверка - находится ли рецепт в избранном.
+        Args:
+            obj (Recipe): Переданный для проверки рецепт.
+        Returns:
+            bool: True - если рецепт в `избранном`
+            у запращивающего пользователя, иначе - False.
+        """
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
         return user.favorites.filter(id=obj.id).exists()
 
     def get_is_in_shopping_cart(self, obj):
+        """Проверка - находится ли рецепт в списке  покупок.
+        Args:
+            obj (Recipe): Переданный для проверки рецепт.
+        Returns:
+            bool: True - если рецепт в `списке покупок`
+            у запращивающего пользователя, иначе - False.
+        """
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
         return user.carts.filter(id=obj.id).exists()
 
     def validate(self, data):
+        """Проверка вводных данных при создании/редактировании рецепта.
+        Args:
+            data (dict): Вводные данные.
+        Raises:
+            ValidationError: Тип данных несоответствует ожидаемому.
+        Returns:
+            dict: Проверенные данные.
+        """
         name = str(self.initial_data.get('name')).strip()
         tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
@@ -170,6 +252,9 @@ class RecipeSerializer(ModelSerializer):
                 raise ValidationError(
                     f'"{value}" должен быть в формате "[]"'
                 )
+
+        for tag in tags:
+            check_value_validate(tag, Tag)
 
         valid_ingredients = []
         for ing in ingredients:
@@ -190,6 +275,12 @@ class RecipeSerializer(ModelSerializer):
         return data
 
     def create(self, validated_data):
+        """Создаёт рецепт.
+        Args:
+            validated_data (dict): Данные для создания рецепта.
+        Returns:
+            Recipe: Созданый рецепт.
+        """
         image = validated_data.pop('image')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
@@ -199,6 +290,13 @@ class RecipeSerializer(ModelSerializer):
         return recipe
 
     def update(self, recipe, validated_data):
+        """Обновляет рецепт.
+        Args:
+            recipe (Recipe): Рецепт для изменения.
+            validated_data (dict): Изменённые данные.
+        Returns:
+            Recipe: Обновлённый рецепт.
+        """
         tags = validated_data.get('tags')
         ingredients = validated_data.get('ingredients')
 

@@ -15,7 +15,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:81', 'http://127.0.0.1:81']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:81', 'http://127.0.0.1:81', 'http://158.160.25.222']
 
 ROOT_URLCONF = 'foodgram.urls'
 
