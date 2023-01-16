@@ -134,7 +134,7 @@ class UserViewSet(UserViewSet):
 
     @action(
         detail=True,
-        methods=['post', 'delete'],
+        methods=['post', 'delete', 'get'],
         permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, id):
@@ -157,8 +157,8 @@ class UserViewSet(UserViewSet):
 
     @action(
         detail=False,
-        permission_classes=[IsAuthenticated],
-        methods=['post', 'delete', 'get'],)
+        permission_classes=[IsAuthenticated]
+    )
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
