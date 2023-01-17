@@ -69,7 +69,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['GET'])
     def download_shopping_cart(self, request):
-        ingredients = IngredientRecipe.objects.filter(
+        ingredients = IngredientRecipe.select_related(
             recipe__shopping_list__user=request.user
         ).order_by('ingredient__name').values(
             'ingredient__name', 'ingredient__measurement_unit'
@@ -78,7 +78,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=('POST', 'GET'),
+        methods=('POST',),
         permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
         context = {'request': request}
@@ -103,7 +103,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=('POST', 'GET'),
+        methods=('POST',),
         permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         context = {"request": request}
@@ -134,7 +134,7 @@ class UserViewSet(UserViewSet):
 
     @action(
         detail=True,
-        methods=['post', 'delete', 'get'],
+        methods=['post', 'delete'],
         permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, id):
@@ -154,7 +154,6 @@ class UserViewSet(UserViewSet):
                 Follow, user=user, author=author
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(serializer.data)
 
     @action(
         detail=False,

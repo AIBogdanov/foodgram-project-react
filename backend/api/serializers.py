@@ -28,11 +28,15 @@ class UserSerializer(UserSerializer):
                   'last_name', 'is_subscribed', )
 
     def get_is_subscribed(self, obj):
-        request = self.context.get('request')
-        if self.context.get('request').user.is_anonymous:
-            return False
-        return obj.following.filter(user=request.user).exists()
+        # request = self.context.get('request')
+        # if self.context.get('request').user.is_anonymous:
+        #     return False
+        # return obj.following.filter(user=request.user).exists()
 
+        user = self.context.get('request').user
+        if user.is_anonymous or (user == obj):
+            return False
+        return user.following.filter(id=obj.id).exists()
 
 class UserCreateSerializer(UserCreateSerializer):
     """ Сериализатор создания пользователя """
@@ -231,9 +235,6 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         return RecipeReadSerializer(instance, context={
             'request': self.context.get('request')
         }).data
-
-
-
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
