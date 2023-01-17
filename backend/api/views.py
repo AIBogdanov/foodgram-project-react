@@ -137,7 +137,7 @@ class UserViewSet(UserViewSet, AddDelViewMixin):
     @action(
         detail=True,
         methods=['post', 'delete', 'get'],
-        permission_classes=[IsAuthenticated],
+        # permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, id):
         return self.add_del_obj(id, 'SUBSCRIBE_M2M')
