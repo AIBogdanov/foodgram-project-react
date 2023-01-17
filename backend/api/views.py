@@ -78,7 +78,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=('POST',),
+        methods=('POST','GET'),
         permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
         context = {'request': request}
@@ -103,7 +103,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(
         detail=True,
-        methods=('POST',),
+        methods=('POST','GET'),
         permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         context = {"request": request}
@@ -154,6 +154,7 @@ class UserViewSet(UserViewSet):
                 Follow, user=user, author=author
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data)
 
     @action(
         detail=False,
