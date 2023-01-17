@@ -38,6 +38,7 @@ class UserSerializer(UserSerializer):
             return False
         return user.following.filter(id=obj.id).exists()
 
+
 class UserCreateSerializer(UserCreateSerializer):
     """ Сериализатор создания пользователя """
 
@@ -50,32 +51,45 @@ class UserCreateSerializer(UserCreateSerializer):
 
 class SubscribeListSerializer(UserSerializer):
     """ Сериализатор для получения подписок """
-    recipes_count = SerializerMethodField()
+    recipes_count = SerializerMethodField(many=True, read_only=True)
     recipes = RecipeShortSerializer
 
-    class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + ('recipes_count', 'recipes')
-        read_only_fields = ('email', 'username', 'first_name', 'last_name')
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count',
+        )
+        read_only_fields = '__all__',
 
-    def validate(self, data):
-        author_id = self.context.get(
-            'request').parser_context.get('kwargs').get('id')
-        author = get_object_or_404(User, id=author_id)
-        user = self.context.get('request').user
-        if user.follower.filter(author=author_id).exists():
-            raise ValidationError(
-                detail='Подписка уже существует',
-                code=status.HTTP_400_BAD_REQUEST,
-            )
-        if user == author:
-            raise ValidationError(
-                detail='Нельзя подписаться на самого себя',
-                code=status.HTTP_400_BAD_REQUEST,
-            )
-        return data
+    def get_is_subscribed(*args):
+        return True
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
+
+    # def validate(self, data):
+    #     author_id = self.context.get(
+    #         'request').parser_context.get('kwargs').get('id')
+    #     author = get_object_or_404(User, id=author_id)
+    #     user = self.context.get('request').user
+    #     if user.follower.filter(author=author_id).exists():
+    #         raise ValidationError(
+    #             detail='Подписка уже существует',
+    #             code=status.HTTP_400_BAD_REQUEST,
+    #         )
+    #     if user == author:
+    #         raise ValidationError(
+    #             detail='Нельзя подписаться на самого себя',
+    #             code=status.HTTP_400_BAD_REQUEST,
+    #         )
+    #     return data
 
     # def get_recipes(self, obj):
     #     request = self.context.get('request')
