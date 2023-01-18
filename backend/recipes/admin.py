@@ -1,76 +1,75 @@
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, TabularInline, register, site
+from django.utils.safestring import mark_safe
 
-from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                     ShoppingCart, Tag)
-from ..users.models import Follow
+from .models import AmountIngredient, Ingredient, Recipe, Tag
 
-
-class IngredientInline(admin.TabularInline):
-    model = IngredientRecipe
-    extra = 3
-    min_num = 1
+site.site_header = 'Администрирование Foodgram'
+EMPTY_VALUE_DISPLAY = 'Значение не указано'
 
 
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('author', 'name', 'cooking_time',
-                    'get_favorites', 'get_ingredients',)
-    search_fields = ('name', 'author', 'tags')
-    list_filter = ('author', 'name', 'tags')
+class IngredientInline(TabularInline):
+    model = AmountIngredient
+    extra = 2
+
+
+@register(AmountIngredient)
+class LinksAdmin(ModelAdmin):
+    pass
+
+
+@register(Ingredient)
+class IngredientAdmin(ModelAdmin):
+    list_display = (
+        'name', 'measurement_unit',
+    )
+    search_fields = (
+        'name',
+    )
+    list_filter = (
+        'name',
+    )
+
+    save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@register(Recipe)
+class RecipeAdmin(ModelAdmin):
+    list_display = (
+        'name', 'author', 'get_image',
+    )
+    fields = (
+        ('name', 'cooking_time',),
+        ('author', 'tags',),
+        ('text',),
+        ('image',),
+    )
+    raw_id_fields = ('author', )
+    search_fields = (
+        'name', 'author',
+    )
+    list_filter = (
+        'name', 'author__username',
+    )
+
     inlines = (IngredientInline,)
-    empty_value_display = '-пусто-'
+    save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
-    def get_favorites(self, obj):
-        return obj.favorites.count()
-    get_favorites.short_description = 'Избранное'
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
-    def get_ingredients(self, obj):
-        return ', '.join([
-            ingredients.name for ingredients
-            in obj.ingredients.all()])
-    get_ingredients.short_description = 'Ингридиенты'
+    get_image.short_description = 'Изображение'
 
 
-class IngredientAdmin(admin.ModelAdmin):
-    """ Админ панель управление ингридиентами """
-    list_display = ('name', 'measurement_unit')
-    search_fields = ('name', )
-    list_filter = ('name', )
-    empty_value_display = '-пусто-'
+@register(Tag)
+class TagAdmin(ModelAdmin):
+    list_display = (
+        'name', 'color', 'slug',
+    )
+    search_fields = (
+        'name', 'color'
+    )
 
-
-class TagAdmin(admin.ModelAdmin):
-    """ Админ панель управление тегами """
-    list_display = ('name', 'color', 'slug')
-    search_fields = ('name', 'slug')
-    list_filter = ('name', )
-    empty_value_display = '-пусто-'
-
-
-class FavoriteAdmin(admin.ModelAdmin):
-    """ Админ панель управление подписками """
-    list_display = ('user', 'recipe')
-    list_filter = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
-    empty_value_display = '-пусто-'
-
-
-class ShoppingCartAdmin(admin.ModelAdmin):
-    """ Админ панель списка покупок """
-    list_display = ('recipe', 'user')
-    list_filter = ('recipe', 'user')
-    search_fields = ('user', )
-    empty_value_display = '-пусто-'
-
-
-admin.site.register(ShoppingCart, ShoppingCartAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Favorite, FavoriteAdmin)
-
-
-class FollowAdmin(admin.ModelAdmin):
-    list_display = ('user', 'author')
-
-
-admin.site.register(Follow, FollowAdmin)
+    save_on_top = True
+    empty_value_display = EMPTY_VALUE_DISPLAY

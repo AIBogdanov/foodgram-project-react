@@ -1,37 +1,43 @@
-import os
+from pathlib import Path
 
-from dotenv import load_dotenv
+from decouple import Csv, config
 
-load_dotenv()
+# Eсли true то будет использована прилагаемая база SQLite c записанными данными
+REVIEW = 0
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-SECRET_KEY = os.getenv('TOKEN', 'default-value')
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-SQL = False
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', default='*')]
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost http://127.0.0.1',
+    cast=Csv()
+)
 
-AUTH_USER_MODEL = 'users.User'
+ROOT_URLCONF = 'foodgram.urls'
+
+WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    'users.apps.UsersConfig',
-    'recipes.apps.RecipesConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'django_filters',
     'api.apps.ApiConfig',
-    "rest_framework",
-    "rest_framework.authtoken",
-    "django_filters",
-    "djoser",
-    "drf_yasg",
-    "colorfield",
+    'recipes.apps.RecipesConfig',
+    'users.apps.UsersConfig',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -43,8 +49,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-ROOT_URLCONF = 'foodgram.urls'
 
 TEMPLATES = [
     {
@@ -62,86 +66,81 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'foodgram.wsgi.application'
-
-
-if SQL:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': config(
+            'DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config(
+            'DB_NAME', default='postgres'),
+        'USER': config(
+            'POSTGRES_USER', default='postgres'),
+        'PASSWORD': config(
+            'POSTGRES_PASSWORD', default='password'),
+        'HOST': config(
+            'DB_HOST', default='db'),
+        'PORT': config(
+            'DB_PORT', default=5432, cast=int)
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-            'NAME': os.getenv('DB_NAME', default='postgres'),
-            'USER': os.getenv('POSTGRES_USER', default='postgres'),
-            'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
-            'HOST': os.getenv('DB_HOST', default='localhost'),
-            'PORT': os.getenv('DB_PORT', default='5432')
-        }
-    }
+}
 
+AUTH_USER_MODEL = 'users.MyUser'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME':
+     'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME':
+     'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME':
+     'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME':
+     'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':
+    ['rest_framework.authentication.TokenAuthentication', ],
+
+    'DEFAULT_PERMISSION_CLASSES':
+    ['rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
 }
 
 DJOSER = {
-    "SERIALIZERS": {
-        "user_create": "api.serializers.UserCreateSerializer",
-        "user": "api.serializers.UserSerializer",
-        "current_user": "api.serializers.UserSerializer",
+    'LOGIN_FIELD': 'email',
+    'HIDE_USERS': False,
+    'PERMISSIONS': {
+        'resipe': ('api.permissions.AuthorStaffOrReadOnly,',),
+        'recipe_list': ('api.permissions.AuthorStaffOrReadOnly',),
+        'user': ('api.permissions.OwnerUserOrReadOnly',),
+        'user_list': ('api.permissions.OwnerUserOrReadOnly',),
     },
-
-    "PERMISSIONS": {
-        "user": ["djoser.permissions.CurrentUserOrAdminOrReadOnly"],
-        "user_list": ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
+    'SERIALIZERS': {
+        'user': 'api.serializers.UserSerializer',
+        'user_list': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+        'user_create': 'api.serializers.UserSerializer',
     },
-
-    "HIDE_USERS": False,
 }
 
-LANGUAGE_CODE = 'ru-RU'
-
-TIME_ZONE = 'Europe/Moscow'
-
+LANGUAGE_CODE = 'ru'
+TIME_ZONE = 'UTC'
 USE_I18N = True
-
-USE_L10N = True
-
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / STATIC_URL
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / MEDIA_URL
 
-LENGTH_OF_FIELDS_USER_1 = 150
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LENGTH_OF_FIELDS_USER_2 = 254
+PASSWORD_RESET_TIMEOUT = 60 * 60
 
-LENGTH_OF_FIELDS_RECIPES = 200
+# for review
+if REVIEW:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': str(BASE_DIR / 'db.sqlite3'),
+        }
+    }
