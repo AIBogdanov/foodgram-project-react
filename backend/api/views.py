@@ -1,8 +1,9 @@
+from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
+# from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
@@ -129,7 +130,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class UserViewSet(UserViewSet, AddDelViewMixin):
+class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = CustomPagination
@@ -140,7 +141,7 @@ class UserViewSet(UserViewSet, AddDelViewMixin):
         # permission_classes=[IsAuthenticated],
     )
     def subscribe(self, request, id):
-        return self.add_del_obj(id, 'SUBSCRIBE_M2M')
+        return self.add_del_obj(id, meneger='SUBSCRIBE_M2M')
 
     @action(methods=('get',), detail=False)
     def subscriptions(self, request):
