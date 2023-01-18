@@ -12,7 +12,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 class FollowAdmin(admin.ModelAdmin):
-    list_display = ('username', 'author')
+    list_display = ('user', 'author')
 
 
 admin.site.register(User, UserAdmin)
