@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)
+from ..users.models import Follow
 
 
 class IngredientInline(admin.TabularInline):
@@ -66,3 +67,10 @@ admin.site.register(ShoppingCart, ShoppingCartAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Favorite, FavoriteAdmin)
+
+
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ('user', 'author')
+
+
+admin.site.register(Follow, FollowAdmin)
