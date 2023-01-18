@@ -10,14 +10,6 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
 from users.models import User
 
 
-class RecipeShortSerializer(serializers.ModelSerializer):
-    """ Сериализатор полей избранных рецептов и покупок """
-
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
-
-
 class UserSerializer(UserSerializer):
     """ Сериализатор пользователя """
     is_subscribed = SerializerMethodField(read_only=True)
@@ -47,7 +39,7 @@ class UserCreateSerializer(UserCreateSerializer):
 class SubscribeListSerializer(UserSerializer):
     """ Сериализатор для получения подписок """
     recipes_count = SerializerMethodField()
-    recipes = RecipeShortSerializer
+    recipes = SerializerMethodField()
 
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('recipes_count', 'recipes')
@@ -231,6 +223,14 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         return RecipeReadSerializer(instance, context={
             'request': self.context.get('request')
         }).data
+
+
+class RecipeShortSerializer(serializers.ModelSerializer):
+    """ Сериализатор полей избранных рецептов и покупок """
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
