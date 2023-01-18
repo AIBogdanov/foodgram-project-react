@@ -145,7 +145,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
 
     @action(methods=('get',), detail=False)
     def subscriptions(self, request):
-        user = self.request.user
+        user = request.user
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
         authors = user.subscribe.all()
