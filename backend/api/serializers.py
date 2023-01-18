@@ -29,9 +29,9 @@ class UserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if self.context.get('request').user.is_anonymous:
+        if request.user.is_anonymous:
             return False
-        return obj.following.filter(user=request.user).exists()
+        return request.user.following.filter(user=request.user).exists()
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -47,7 +47,7 @@ class UserCreateSerializer(UserCreateSerializer):
 class SubscribeListSerializer(UserSerializer):
     """ Сериализатор для получения подписок """
     recipes_count = SerializerMethodField()
-    recipes = RecipeShortSerializer
+    recipes = RecipeShortSerializer()
 
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('recipes_count', 'recipes')
@@ -140,13 +140,13 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return obj.favorites.filter(user=request.user).exists()
+        return request.user.favorites.filter(id=obj.id).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return obj.shopping_list.filter(user=request.user).exists()
+        return request.user.shopping_list.filter(id=obj.id).exists()
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
