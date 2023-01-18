@@ -131,7 +131,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
-    queryset = User.objects.all()
+    # queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = CustomPagination
 
@@ -145,7 +145,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
 
     @action(methods=('get',), detail=False)
     def subscriptions(self, request):
-        user = request.user
+        user = self.request.user
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
         authors = user.subscribe.all()
