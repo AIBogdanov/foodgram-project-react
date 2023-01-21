@@ -1,33 +1,65 @@
-from django.contrib.auth import get_user_model
-from django.db import models
+from api import conf
 
-User = get_user_model()
+from django.contrib.auth.models import AbstractUser
+from django.db.models import (CharField, CheckConstraint, EmailField,
+                              ManyToManyField, Q)
+from django.db.models.functions import Length
+from django.utils.translation import gettext_lazy as _
+
+from .validators import MinLenValidator, OneOfTwoValidator
+
+CharField.register_lookup(Length)
 
 
-class Subscription(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='subscribers',
-        verbose_name='Подписчик'
+class MyUser(AbstractUser):
+    email = EmailField(
+        verbose_name='Адрес электронной почты',
+        max_length=conf.MAX_LEN_EMAIL_FIELD,
+        unique=True,
+        help_text=conf.USERS_HELP_EMAIL
     )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='subscriptions',
-        verbose_name='Автор'
+    username = CharField(
+        verbose_name='Уникальный юзернейм',
+        max_length=conf.MAX_LEN_USERS_CHARFIELD,
+        unique=True,
+        help_text=(conf.USERS_HELP_UNAME),
+        validators=(
+            MinLenValidator(min_len=conf.MIN_USERNAME_LENGTH),
+            OneOfTwoValidator(),
+        ),
+    )
+    first_name = CharField(
+        verbose_name='Имя',
+        max_length=conf.MAX_LEN_USERS_CHARFIELD,
+        help_text=conf.USERS_HELP_FNAME
+    )
+    last_name = CharField(
+        verbose_name='Фамилия',
+        max_length=conf.MAX_LEN_USERS_CHARFIELD,
+        help_text=conf.USERS_HELP_FNAME
+    )
+    password = CharField(
+        verbose_name=_('Пароль'),
+        max_length=conf.MAX_LEN_USERS_CHARFIELD,
+        help_text=conf.USERS_HELP_FNAME
+    )
+    subscribe = ManyToManyField(
+        verbose_name='Подписка',
+        related_name='subscribers',
+        to='self',
+        symmetrical=False,
     )
 
     class Meta:
-        ordering = ['user', 'author']
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'author'],
-                name='unique_subscribe',
-            )
-        ]
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+        ordering = ('username',)
+        constraints = (
+            CheckConstraint(
+                check=Q(username__length__gte=conf.MIN_USERNAME_LENGTH),
+                name='\nusername too short\n',
+            ),
+        )
 
     def __str__(self):
-        return '{} - {}'.format(self.user, self.author)
+        return f'{self.username}: {self.email}'

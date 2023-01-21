@@ -1,15 +1,6 @@
-FROM python:3.8.6-slim
-
+FROM python:3.10-slim
 WORKDIR /app
-
 COPY requirements.txt .
-
-RUN apt update && \
-    apt upgrade -y && \
-    python3 -m pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install gunicorn==20.0.4
-
+RUN pip3 install -r requirements.txt --no-cache-dir
 COPY . .
-
-CMD ["gunicorn", "foodgram.wsgi", "-w", "4", "-t", "600", "-b", "0.0.0.0:8000"]
+CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000" ]
