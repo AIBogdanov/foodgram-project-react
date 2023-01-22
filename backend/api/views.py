@@ -119,9 +119,8 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         user = self.request.user
         if not user.carts.exists():
             return Response(status=HTTP_400_BAD_REQUEST)
-        ingredients = AmountIngredient.objects.all().select_related(
-            recipe__in=(user.carts.values('id'))
-        ).values(
+        ingredients = AmountIngredient.objects.select_related(
+            user.carts.values('id')).values(
             ingredient=F('ingredients__name'),
             measure=F('ingredients__measurement_unit')
         ).annotate(amount=Sum('amount'))
