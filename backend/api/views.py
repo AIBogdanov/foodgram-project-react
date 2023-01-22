@@ -119,10 +119,11 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         user = self.request.user
         if not user.carts.exists():
             return Response(status=HTTP_400_BAD_REQUEST)
-        ingredients = AmountIngredient.objects.select_related(
-            Recipe).get('id').values(
-                ingredient=F('ingredients__name'),
-                measure=F('ingredients__measurement_unit')
+        ingredients = AmountIngredient.objects.select_related().filter(
+            recipe__in=(user.carts.values('id'))
+        ).values(
+            ingredient=F('ingredients__name'),
+            measure=F('ingredients__measurement_unit')
         ).annotate(amount=Sum('amount'))
 
         filename = f'{user.username}_shopping_list.txt'
@@ -135,7 +136,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
                 f'{ing["ingredient"]}: {ing["amount"]} {ing["measure"]}\n'
             )
 
-        shopping_list += '\n\nПосчитано в Foodgram для Вас'
+        shopping_list += '\n\nПосчитано в Foodgram'
 
         response = HttpResponse(
             shopping_list, content_type='text.txt; charset=utf-8'
