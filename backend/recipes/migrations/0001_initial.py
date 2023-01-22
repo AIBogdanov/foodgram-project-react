@@ -61,7 +61,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200, unique=True, verbose_name='Тэг')),
-                ('color', models.CharField(blank=True, default='FF', max_length=6, null=True, verbose_name='Цветовой HEX-код')),
+                ('color', models.CharField(blank=True, default='FF', max_length=7, null=True, verbose_name='Цветовой HEX-код')),
                 ('slug', models.CharField(max_length=200, unique=True, verbose_name='Слаг тэга')),
             ],
             options={
