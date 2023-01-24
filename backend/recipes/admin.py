@@ -33,6 +33,7 @@ class RecipeAdmin(ModelAdmin):
         'name', 'author', 'get_image',
     )
     fields = (
+        ('is_favorited_count'),
         ('name', 'cooking_time',),
         ('author', 'tags',),
         ('text',),
@@ -64,13 +65,3 @@ class TagAdmin(ModelAdmin):
         'name', 'color'
     )
     empty_value_display = EMPTY_VALUE_DISPLAY
-
-
-@register(AmountIngredient)
-class AmountIngredient(ModelAdmin):
-    list_display = (
-        'recipe', 'ingredients', 'amount',
-    )
-    search_fields = (
-        'recipe'
-    )
