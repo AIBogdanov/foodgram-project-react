@@ -33,7 +33,7 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image', 
+        'name', 'author', 'get_image',
         'get_tags',
         'get_is_favorited'
     )
@@ -48,7 +48,7 @@ class RecipeAdmin(ModelAdmin):
         'name', 'author',
     )
     list_filter = (
-        'name', 'author__username', 'get_is_favorited', 'get_tags',
+        'name', 'author__username', 'tags',
     )
 
     inlines = (IngredientInline,)
