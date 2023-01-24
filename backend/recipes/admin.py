@@ -56,7 +56,7 @@ class RecipeAdmin(ModelAdmin):
     get_image.short_description = 'Изображение'
 
     def get_tags(self, obj):
-        return ("\n".join([t.tags for t in obj.tags.all()])).count()
+        return ("\n".join([t.name for t in obj.tags.all()])).count()
 
 @register(Tag)
 class TagAdmin(ModelAdmin):
