@@ -39,17 +39,16 @@ class RecipeAdmin(ModelAdmin):
     )
     fields = (
         ('name', 'cooking_time',),
-        ('author', 'get_tags',),
+        ('author', 'tags',),
         ('text',),
         ('image',),
-        'get_is_favorited'
     )
     raw_id_fields = ('author', )
     search_fields = (
         'name', 'author',
     )
     list_filter = (
-        'name', 'author__username', 'get_tags', 'get_is_favorited'
+        'name', 'author__username', 'tags'
     )
 
     inlines = (IngredientInline,)
@@ -58,11 +57,8 @@ class RecipeAdmin(ModelAdmin):
     def get_image(self, obj):
         return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
-    # def get_tags(self, obj):
-    #     str = ''
-    #     for tag in obj.tags.all():
-    #         str += (tag.name + '/n')
-    #     return str
+    def get_tags(self, obj):
+        return obj.tags.all()
 
     def get_is_favorited(self, obj):
         count = 0
