@@ -35,7 +35,7 @@ class RecipeAdmin(ModelAdmin):
         ('image',),
     )
     list_display = (
-        'name', 'author', 'get_image', 'tags',
+        'name', 'author', 'get_image', 'tag',
         # 'get_is_favorited'
     )
     raw_id_fields = ('author', )
