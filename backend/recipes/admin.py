@@ -37,7 +37,7 @@ class RecipeAdmin(ModelAdmin):
         ('author', 'tags',),
         ('text',),
         ('image',),
-        ('get_favorite'),
+        # ('get_favorite'),
     )
     raw_id_fields = ('author', )
     search_fields = (
@@ -55,10 +55,10 @@ class RecipeAdmin(ModelAdmin):
 
     get_image.short_description = 'Изображение'
 
-    def get_favorite(self, obj):
-        return obj.favorites.count()
+    # def get_favorite(self, obj):
+    #     return obj.favorites.count()
 
-    get_favorite.short_description = 'Избранное'
+    # get_favorite.short_description = 'Избранное'
 
 
 @register(Tag)
