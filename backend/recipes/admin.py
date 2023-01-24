@@ -34,7 +34,7 @@ class IngredientAdmin(ModelAdmin):
 class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image',
-        'recipes.tags', 'get_tags',
+        'get_tags', 'tags'
         'get_is_favorited'
     )
     fields = (
