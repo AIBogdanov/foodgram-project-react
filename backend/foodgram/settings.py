@@ -129,11 +129,13 @@ DJOSER = {
     },
 }
 
-LANGUAGE_CODE = 'ru'
+LANGUAGE_CODE = 'ru-RU'
+# LANGUAGES = (
+#     ('de', gettext('German')),
+# )
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
