@@ -33,13 +33,13 @@ class RecipeAdmin(ModelAdmin):
         'name', 'author', 'get_image',
     )
     fields = (
-        # ('is_favorited_count'),
+        ('is_favorited_count'),
         ('name', 'cooking_time',),
         ('author', 'tags',),
         ('text',),
         ('image',),
     )
-    # raw_id_fields = ('author', )
+    raw_id_fields = ('author', )
     search_fields = (
         'name', 'author', 'tags'
     )
