@@ -2,6 +2,7 @@ from django.contrib.admin import ModelAdmin, StackedInline, register, site
 from django.utils.safestring import mark_safe
 
 from .models import AmountIngredient, Ingredient, Recipe, Tag
+from users.models import MyUser
 
 site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'
@@ -35,8 +36,8 @@ class RecipeAdmin(ModelAdmin):
         ('image',),
     )
     list_display = (
-        'name', 'author', 'get_image', 'tag',
-        # 'get_is_favorited'
+        'name', 'author', 'get_image', 'tags',
+        'get_is_favorited'
     )
     raw_id_fields = ('author', )
     search_fields = (
@@ -54,13 +55,10 @@ class RecipeAdmin(ModelAdmin):
 
     get_image.short_description = 'Изображение'
 
-    # def get_is_favorited(self, obj):
-    #     user = self.context.get('request').user
-    #     if user.is_anonymous:
-    #         return False
-    #     return user.favorites.filter(id=obj.id).exists()
+    def get_is_favorited(self, obj):
+        return obj.filter(favorite=MyUser.all()).count()
 
-    # get_is_favorited.short_description = 'Избранное'
+    get_is_favorited.short_description = 'Избранное'
 
 
 class TagAdmin(ModelAdmin):
