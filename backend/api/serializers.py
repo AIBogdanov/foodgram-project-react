@@ -164,7 +164,7 @@ class RecipeSerializer(ModelSerializer):
         tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
         values_as_list = (tags, ingredients)
-        image = self.initial_data.get('image')
+        # image = self.initial_data.get('image')
 
         for value in values_as_list:
             if not isinstance(value, list):
