@@ -56,8 +56,7 @@ class RecipeAdmin(ModelAdmin):
     get_image.short_description = 'Изображение'
 
     def get_favorite(self, obj):
-        user = self.context.get('request').user
-        return user.favorites.filter(id=obj.id).count()
+        return obj.favorites.count()
 
     get_favorite.short_description = 'Избранное'
 
