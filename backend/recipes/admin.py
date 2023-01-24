@@ -63,7 +63,11 @@ class RecipeAdmin(ModelAdmin):
     #     return ("\n".join([t.name for t in obj.tags.all()])).count()
     
     def get_is_favorited(self, obj):
-        return User.favorites.through.objects.all().filter(id=obj.id).count()
+        count = 0
+        for user in User.favorites.through.objects.all().filter(id=obj.id):
+            if user:
+                count += 1
+        return count
 
 @register(Tag)
 class TagAdmin(ModelAdmin):
