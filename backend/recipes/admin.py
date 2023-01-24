@@ -34,7 +34,7 @@ class IngredientAdmin(ModelAdmin):
 class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image',
-        'get_tags',
+        'recipes__tags', 'get_tags',
         'get_is_favorited'
     )
     fields = (
@@ -58,7 +58,7 @@ class RecipeAdmin(ModelAdmin):
         return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
     def get_tags(self, obj):
-        return obj.tags.all()
+        return obj.tags.all().name
 
     def get_is_favorited(self, obj):
         count = 0
