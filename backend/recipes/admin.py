@@ -37,7 +37,7 @@ class RecipeAdmin(ModelAdmin):
     )
     list_display = (
         'name', 'author', 'get_image', 'tags',
-        'get_is_favorited'
+        'in_favorite'
     )
     raw_id_fields = ('author', )
     search_fields = (
@@ -55,10 +55,8 @@ class RecipeAdmin(ModelAdmin):
 
     get_image.short_description = 'Изображение'
 
-    def get_is_favorited(self, obj):
-        return obj.filter(favorite=MyUser.all()).count()
-
-    get_is_favorited.short_description = 'Избранное'
+    def in_favorite(self, obj):
+        return obj.favorites.all().count()
 
 
 class TagAdmin(ModelAdmin):
