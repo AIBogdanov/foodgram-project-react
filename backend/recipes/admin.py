@@ -64,7 +64,9 @@ class RecipeAdmin(ModelAdmin):
     
     def get_is_favorited(self, obj):
         count = 0
-        for user in User.favorites.through.objects.all().filter(id=obj.id):
+        for user in User.favorites.through.objects.all().filter(
+            favorites_id=obj.favorites_id
+        ):
             if user:
                 count += 1
         return count
