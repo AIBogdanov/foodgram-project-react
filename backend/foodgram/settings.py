@@ -131,9 +131,6 @@ DJOSER = {
 }
 
 LANGUAGE_CODE = 'ru-RU'
-LANGUAGES = (
-    ('ru', gettext('Russia')),
-)
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
