@@ -58,7 +58,7 @@ class Tag(Model):
 
 class Ingredient(Model):
     name = CharField(
-        verbose_name='Ингридиент',
+        verbose_name='ингредиент',
         max_length=MAX_LEN_RECIPES_CHARFIELD,
     )
     measurement_unit = CharField(
@@ -67,8 +67,8 @@ class Ingredient(Model):
     )
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'ингредиент'
+        verbose_name_plural = 'ингредиенты'
         ordering = ('name', )
         constraints = (
             UniqueConstraint(
@@ -193,8 +193,8 @@ class AmountIngredient(Model):
     )
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Количество ингридиентов'
+        verbose_name = 'ингредиент'
+        verbose_name_plural = 'Количество ингредиентов'
         ordering = ('recipe', )
         constraints = (
             UniqueConstraint(

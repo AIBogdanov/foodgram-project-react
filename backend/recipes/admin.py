@@ -38,12 +38,12 @@ class RecipeAdmin(ModelAdmin):
         ('text',),
         ('image',),
     )
-    raw_id_fields = ('author', )
+    # raw_id_fields = ('author', )
     search_fields = (
-        'name', 'author',
+        'name', 'author', 'tags'
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'tags'
     )
 
     inlines = (IngredientInline,)
@@ -64,3 +64,13 @@ class TagAdmin(ModelAdmin):
         'name', 'color'
     )
     empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@register(AmountIngredient)
+class AmountIngredient(ModelAdmin):
+    list_display = (
+        'recipe', 'ingredients', 'amount',
+    )
+    search_fields = (
+        'recipe'
+    )

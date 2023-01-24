@@ -120,9 +120,7 @@ class RecipeSerializer(ModelSerializer):
     ingredients = SerializerMethodField()
     is_favorited = SerializerMethodField()
     is_in_shopping_cart = SerializerMethodField()
-    image = Base64ImageField(error_messages={
-        'required': 'Формат изображения не поддерживается'}
-    )
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
