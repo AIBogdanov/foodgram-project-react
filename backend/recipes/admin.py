@@ -43,7 +43,6 @@ class RecipeAdmin(ModelAdmin):
         ('text',),
         ('image',),
     )
-    # raw_id_fields = ('author', )
     search_fields = (
         'name', 'author',
     )
@@ -70,8 +69,10 @@ class RecipeAdmin(ModelAdmin):
                 count += 1
         return count
 
+    get_tags.short_description = 'Теги (без фильтрации)'
     get_image.short_description = 'Изображение'
     get_is_favorited.short_description = 'Число добавлений в избранное'
+
 
 @register(Tag)
 class TagAdmin(ModelAdmin):

@@ -164,7 +164,7 @@ class RecipeSerializer(ModelSerializer):
         tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
         values_as_list = (tags, ingredients)
-        # image = self.initial_data.get('image')
+        image = self.initial_data.get('image')
 
         for value in values_as_list:
             if not isinstance(value, list):
@@ -184,10 +184,10 @@ class RecipeSerializer(ModelSerializer):
                 {'ingredient': ingredient, 'amount': amount}
             )
 
-        # if image.is_valid():
-        #     raise ValidationError(
-        #         'Не поддерживаемый формат изображения.'
-        #         )
+        if not image.is_valid():
+            raise ValidationError(
+                'Не поддерживаемый формат изображения.'
+                )
 
         data['name'] = name.capitalize()
         data['tags'] = tags
