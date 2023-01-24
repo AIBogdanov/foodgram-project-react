@@ -31,7 +31,7 @@ class IngredientAdmin(ModelAdmin):
 class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image', 
-        # 'get_tags'
+        'get_tags'
     )
     fields = (
         ('name', 'cooking_time',),
@@ -55,8 +55,8 @@ class RecipeAdmin(ModelAdmin):
 
     get_image.short_description = 'Изображение'
 
-    # def get_tags(self):
-    #     return "\n".join([t.tags for t in self.tags.all()])
+    def get_tags(self):
+        return "\n".join([t.tags for t in self.tags.all()])
 
 @register(Tag)
 class TagAdmin(ModelAdmin):
