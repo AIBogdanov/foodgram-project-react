@@ -164,6 +164,7 @@ class RecipeSerializer(ModelSerializer):
         tags = self.initial_data.get('tags')
         ingredients = self.initial_data.get('ingredients')
         values_as_list = (tags, ingredients)
+        image = self.initial_data.get('image')
 
         for value in values_as_list:
             if not isinstance(value, list):
@@ -183,14 +184,20 @@ class RecipeSerializer(ModelSerializer):
                 {'ingredient': ingredient, 'amount': amount}
             )
 
+        if image.is_not_valid():
+            raise ValidationError(
+                'Не поддерживаемый формат изображения.'
+                )
+
         data['name'] = name.capitalize()
         data['tags'] = tags
         data['ingredients'] = valid_ingredients
         data['author'] = self.context.get('request').user
+        data['image'] = image
         return data
 
     def create(self, validated_data):
-        image = validated_data.pop('image')
+        # image = validated_data.pop('image')
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
