@@ -37,14 +37,14 @@ class RecipeAdmin(ModelAdmin):
         ('author', 'tags',),
         ('text',),
         ('image',),
-        # ('get_favorite'),
+        ('get_favorite'),
     )
     raw_id_fields = ('author', )
     search_fields = (
         'name', 'author', 'tags'
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'tags'
     )
 
     inlines = (IngredientInline,)
@@ -55,10 +55,11 @@ class RecipeAdmin(ModelAdmin):
 
     get_image.short_description = 'Изображение'
 
-    # def get_favorite(self, obj):
-    #     return obj.recipe.favorite.count()
+    def get_favorite(self, obj):
+        user = self.context.get('request').user
+        return user.favorites.filter(id=obj.id).count()
 
-    # get_favorite.short_description = 'Избранное'
+    get_favorite.short_description = 'Избранное'
 
 
 @register(Tag)
