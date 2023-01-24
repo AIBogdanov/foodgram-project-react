@@ -30,7 +30,7 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image', 'tags'
+        'name', 'author', 'get_image', 'tags__name'
     )
     fields = (
         ('name', 'cooking_time',),
@@ -40,10 +40,10 @@ class RecipeAdmin(ModelAdmin):
     )
     raw_id_fields = ('author', )
     search_fields = (
-        'name', 'author', 'tags'
+        'name', 'author',
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'tags__name'
     )
 
     inlines = (IngredientInline,)
