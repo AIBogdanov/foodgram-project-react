@@ -13,7 +13,7 @@ class IngredientInline(StackedInline):
     min_num = 1
 
 
-@register(Ingredient)
+# @register(Ingredient)
 class IngredientAdmin(ModelAdmin):
     list_display = (
         'name', 'measurement_unit',
@@ -30,7 +30,7 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image',
+        'name', 'author', 'get_image', 'tags'
     )
     fields = (
         ('name', 'cooking_time',),
@@ -56,12 +56,12 @@ class RecipeAdmin(ModelAdmin):
     get_image.short_description = 'Изображение'
 
     # def get_favorite(self, obj):
-    #     return obj.favorites.count()
+    #     return obj.recipes.favorites.count()
 
     # get_favorite.short_description = 'Избранное'
 
 
-@register(Tag)
+# @register(Tag)
 class TagAdmin(ModelAdmin):
     list_display = (
         'name', 'color', 'slug',
@@ -70,3 +70,7 @@ class TagAdmin(ModelAdmin):
         'name', 'color'
     )
     empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+site.register(Tag, TagAdmin)
+site.register(Ingredient, IngredientAdmin)

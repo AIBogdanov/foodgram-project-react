@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import MyUser
 
+
 @admin.register(MyUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
@@ -13,3 +14,4 @@ class UserAdmin(admin.ModelAdmin):
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
+    get_recipes_count.short_description = 'Рецептов'
