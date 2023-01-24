@@ -34,21 +34,22 @@ class IngredientAdmin(ModelAdmin):
 class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image',
-        'tags',
+        'get_tags',
         'get_is_favorited'
     )
     fields = (
         ('name', 'cooking_time',),
-        ('author', 'tags',),
+        ('author', 'get_tags',),
         ('text',),
         ('image',),
+        'get_is_favorited'
     )
     raw_id_fields = ('author', )
     search_fields = (
         'name', 'author',
     )
     list_filter = (
-        'name', 'author__username', 'tags',
+        'name', 'author__username', 'get_tags', 'get_is_favorited'
     )
 
     inlines = (IngredientInline,)
