@@ -34,7 +34,7 @@ class IngredientAdmin(ModelAdmin):
 class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image', 
-        # 'get_tags',
+        'get_tags',
         'get_is_favorited'
     )
     fields = (
@@ -48,7 +48,7 @@ class RecipeAdmin(ModelAdmin):
         'name', 'author',
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'get_is_favorited', 'get_tags',
     )
 
     inlines = (IngredientInline,)
@@ -59,15 +59,19 @@ class RecipeAdmin(ModelAdmin):
 
     get_image.short_description = 'Изображение'
 
-    # def get_tags(self, obj):
-    #     return ("\n".join([t.name for t in obj.tags.all()])).count()
-    
+    def get_tags(self, obj):
+        str = ''
+        for tag in obj.tags.all():
+            str += (tag.name + '/n')
+        return str
+
     def get_is_favorited(self, obj):
         count = 0
         for user in User.objects.all():
             if user.favorites.filter(id=obj.id):
                 count += 1
         return count
+    get_is_favorited.short_description = 'Число добавлений в избранное'
 
 @register(Tag)
 class TagAdmin(ModelAdmin):
