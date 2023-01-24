@@ -58,7 +58,7 @@ class RecipeAdmin(ModelAdmin):
         return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
     def get_tags(self, obj):
-        return obj.tags.name.all()
+        return obj.tags.name
 
     def get_is_favorited(self, obj):
         count = 0
