@@ -56,7 +56,7 @@ class RecipeAdmin(ModelAdmin):
     get_image.short_description = 'Изображение'
 
     def in_favorite(self, obj):
-        return obj.favorites.all().count()
+        return obj.recipes_favorites.all().count()
 
 
 class TagAdmin(ModelAdmin):
