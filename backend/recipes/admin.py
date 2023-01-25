@@ -37,17 +37,17 @@ class RecipeAdmin(ModelAdmin):
         'get_tags',
         'get_is_favorited',
     )
-    fields = (
-        ('name', 'cooking_time',),
-        ('author', 'tags', 'is_favorited'),
-        ('text',),
-        ('image',),
-    )
+    # fields = (
+    #     ('name', 'cooking_time',),
+    #     ('author', 'tags',),
+    #     ('text',),
+    #     ('image',),
+    # )
     search_fields = (
-        'name', 'author',
+        'name', 'author', 'tags'
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'tags'
     )
 
     inlines = (IngredientInline,)
