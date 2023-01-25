@@ -1,4 +1,6 @@
-from django.contrib.admin import ModelAdmin, StackedInline, register, site
+from django.contrib.admin import (
+    ModelAdmin, StackedInline, register, site
+)
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
 
@@ -33,30 +35,16 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image',
+        'name', 'author', 'get_image', 'tags'
         'get_tags',
         'get_is_favorited',
     )
-    # fields = (
-    #     'name',
-    #     'author',
-    #     'favorite',
-    #     'tags',
-    #     'ingredients',
-    #     'cart',
-    #     'pub_date',
-    #     'image',
-    #     'text',
-    #     'cooking_time',
-    # )
-    exclude = ('is_favorited', 'is_in_shopping_cart',)
     search_fields = (
         'name', 'author', 'tags'
     )
     list_filter = (
         'name', 'author__username', 'tags'
     )
-
     inlines = (IngredientInline,)
     empty_value_display = EMPTY_VALUE_DISPLAY
 
@@ -76,7 +64,7 @@ class RecipeAdmin(ModelAdmin):
                 count += 1
         return count
 
-    get_tags.short_description = 'Теги (без фильтрации)'
+    get_tags.short_description = 'Теги'
     get_image.short_description = 'Изображение'
     get_is_favorited.short_description = 'Число добавлений в избранное'
 
