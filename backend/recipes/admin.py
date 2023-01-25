@@ -83,3 +83,13 @@ class TagAdmin(ModelAdmin):
         'name', 'color'
     )
     empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@register(AmountIngredient)
+class AmountIngredientAdmin(ModelAdmin):
+    list_display = (
+        'recipe', 'ingredients', 'amount',
+    )
+    search_fields = (
+        'recipe', 'ingredients'
+    )
