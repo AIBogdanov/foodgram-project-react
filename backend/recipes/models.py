@@ -9,6 +9,8 @@ from django.db.models import (CASCADE, CharField, CheckConstraint,
                               UniqueConstraint)
 from django.db.models.functions import Length
 
+from django.db import models
+
 CharField.register_lookup(Length)
 
 User = get_user_model()
@@ -105,10 +107,13 @@ class Recipe(Model):
         related_name='favorites',
         to=User,
     )
-    tags = ManyToManyField(
-        verbose_name='Тег',
-        related_name='recipes',
-        to='Tag',
+    tags = models.ForeignKey(
+        Tag, verbose_name='Тег', related_name='recipes',
+        on_delete=models.DO_NOTHING
+        # ManyToManyField(
+        # verbose_name='Тег',
+        # related_name='recipes',
+        # to='Tag',
     )
     ingredients = ManyToManyField(
         verbose_name='Ингредиенты блюда',
