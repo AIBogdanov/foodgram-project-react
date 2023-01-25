@@ -35,15 +35,15 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image', 'tags',
+        'name', 'author', 'get_image', 'tags.name',
         'get_tags',
         'get_is_favorited',
     )
     search_fields = (
-        'name', 'author', 'tags'
+        'name', 'author', 'tags.name'
     )
     list_filter = (
-        'name', 'author__username', 'tags'
+        'name', 'author__username', 'tags.name'
     )
     inlines = (IngredientInline,)
     empty_value_display = EMPTY_VALUE_DISPLAY
