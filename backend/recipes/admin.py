@@ -43,6 +43,7 @@ class RecipeAdmin(ModelAdmin):
     #     ('text',),
     #     ('image',),
     # )
+    exclude = ('is_favorited', 'is_in_shopping_cart',)
     search_fields = (
         'name', 'author', 'tags'
     )
