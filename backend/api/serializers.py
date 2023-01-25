@@ -121,7 +121,6 @@ class RecipeSerializer(ModelSerializer):
     is_favorited = SerializerMethodField()
     is_in_shopping_cart = SerializerMethodField()
     image = Base64ImageField()
-    get_tags = SerializerMethodField()
 
     class Meta:
         model = Recipe
