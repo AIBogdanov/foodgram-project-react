@@ -7,9 +7,12 @@ from .models import MyUser
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'get_recipes_count', 'username', 'email',
-        'first_name', 'last_name')
+        'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'username', 'first_name', 'last_name')
-    list_filter = ('first_name', 'email')
+    list_filter = (
+        ('first_name', 'email'),
+        ('is_staff', admin.BooleanFieldListFilter),
+    )
     empty_value_display = "Данные отсутствуют"
 
     def get_recipes_count(self, obj):

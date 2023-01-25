@@ -47,7 +47,7 @@ class RecipeAdmin(ModelAdmin):
         'name', 'author',
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'get_is_favorited',
     )
 
     inlines = (IngredientInline,)
@@ -57,10 +57,10 @@ class RecipeAdmin(ModelAdmin):
         return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
     def get_tags(self, obj):
-        str = ''
+        list = []
         for tag in obj.tags.all():
-            str += tag.name + ' '
-        return str
+            list.append(tag)
+        return list
 
     def get_is_favorited(self, obj):
         count = 0
