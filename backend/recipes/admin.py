@@ -36,6 +36,7 @@ class RecipeAdmin(ModelAdmin):
         'name', 'author', 'get_image',
         'get_tags',
         'get_is_favorited',
+        'obj.tags.all()'
     )
     fields = (
         ('name', 'cooking_time',),
