@@ -59,7 +59,7 @@ class RecipeAdmin(ModelAdmin):
     def get_tags(self, obj):
         list = []
         for tag in obj.tags.all():
-            list.append(tag[0])
+            list.append(tag.name)
         return list
 
     def get_is_favorited(self, obj):
