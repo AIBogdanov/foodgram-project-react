@@ -10,8 +10,8 @@ class UserAdmin(admin.ModelAdmin):
         'first_name', 'last_name', 'is_staff')
     search_fields = ('email', 'username', 'first_name', 'last_name')
     list_filter = (
-        ('first_name', 'email'),
-        ('is_staff', admin.BooleanFieldListFilter),
+        'first_name', 'email',
+        'is_staff',
     )
     empty_value_display = "Данные отсутствуют"
 
