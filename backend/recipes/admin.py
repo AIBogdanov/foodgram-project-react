@@ -39,7 +39,7 @@ class RecipeAdmin(ModelAdmin):
     )
     fields = (
         ('name', 'cooking_time',),
-        ('author', 'tags', 'get_is_favorited'),
+        ('author', 'tags', 'is_favorited'),
         ('text',),
         ('image',),
     )

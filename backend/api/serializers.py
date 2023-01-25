@@ -121,7 +121,6 @@ class RecipeSerializer(ModelSerializer):
     is_favorited = SerializerMethodField()
     is_in_shopping_cart = SerializerMethodField()
     image = Base64ImageField()
-    get_is_favorited = SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -222,10 +221,3 @@ class RecipeSerializer(ModelSerializer):
 
         recipe.save()
         return recipe
-
-    def get_is_favorited(self, obj):
-        count = 0
-        for user in User.objects.all():
-            if user.favorites.filter(id=obj.id):
-                count += 1
-        return count
