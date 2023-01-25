@@ -38,10 +38,16 @@ class RecipeAdmin(ModelAdmin):
         'get_is_favorited',
     )
     # fields = (
-    #     ('name', 'cooking_time',),
-    #     ('author', 'tags',),
-    #     ('text',),
-    #     ('image',),
+    #     'name',
+    #     'author',
+    #     'favorite',
+    #     'tags',
+    #     'ingredients',
+    #     'cart',
+    #     'pub_date',
+    #     'image',
+    #     'text',
+    #     'cooking_time',
     # )
     exclude = ('is_favorited', 'is_in_shopping_cart',)
     search_fields = (

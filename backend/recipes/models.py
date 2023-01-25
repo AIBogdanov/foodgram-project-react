@@ -104,6 +104,7 @@ class Recipe(Model):
         verbose_name='Понравившиеся рецепты',
         related_name='favorites',
         to=User,
+        blank=True
     )
     tags = ManyToManyField(
         verbose_name='Тег',
@@ -120,6 +121,7 @@ class Recipe(Model):
         verbose_name='Список покупок',
         related_name='carts',
         to=User,
+        blank=True
     )
     pub_date = DateTimeField(
         verbose_name='Дата публикации',
@@ -168,7 +170,7 @@ class Recipe(Model):
 
 class AmountIngredient(Model):
     recipe = ForeignKey(
-        verbose_name='В каких рецептах',
+        verbose_name='Рецепт',
         related_name='ingredient',
         to=Recipe,
         on_delete=CASCADE,
