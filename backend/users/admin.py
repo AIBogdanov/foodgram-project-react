@@ -18,8 +18,3 @@ class UserAdmin(admin.ModelAdmin):
     def get_recipes_count(self, obj):
         return obj.recipes.count()
     get_recipes_count.short_description = 'Рецептов'
-
-
-@admin.register(MyUser.subscribe)
-class SubscribeAdmin(admin.ModelAdmin):
-    list_display = ('username')
