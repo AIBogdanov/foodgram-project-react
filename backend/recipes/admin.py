@@ -40,10 +40,10 @@ class RecipeAdmin(ModelAdmin):
         'get_is_favorited',
     )
     search_fields = (
-        'name', 'author', 'tags.name'
+        'name', 'author', 'tags'
     )
     list_filter = (
-        'name', 'author__username', 'tags.name'
+        'name', 'author__username', 'tags'
     )
     inlines = (IngredientInline,)
     empty_value_display = EMPTY_VALUE_DISPLAY
