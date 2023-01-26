@@ -3,6 +3,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED)
+from drf_base64.fields import Base64FieldMixin
+import imghdr
+from django.db.models import ImageField
 
 from . import conf
 
@@ -42,10 +45,6 @@ class AddDelViewMixin:
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(status=HTTP_400_BAD_REQUEST)
 
-from drf_base64.fields import Base64FieldMixin
-import imghdr
-from django.db.models import ImageField
-
 
 class Base64ImageField(Base64FieldMixin, ImageField):
 
@@ -55,8 +54,8 @@ class Base64ImageField(Base64FieldMixin, ImageField):
         "png",
         "gif"
     )
-    INVALID_FILE_MESSAGE = ("Что-то не то!")
-    INVALID_TYPE_MESSAGE = ("The type of the image couldn't be determined.")
+    # INVALID_FILE_MESSAGE = ("Что-то не то!")
+    # INVALID_TYPE_MESSAGE = ("The type of the image couldn't be determined.")
 
     def get_file_extension(self, filename, decoded_file):
         extension = imghdr.what(filename, decoded_file)
