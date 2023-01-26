@@ -34,9 +34,9 @@ class IngredientAdmin(ModelAdmin):
 
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
+    actions_selection_counter = True
     list_display = (
-        'name', 'author', 'get_image', 
-        'tags',
+        'name', 'author', 'get_image',
         'get_tags',
         'get_is_favorited',
     )
