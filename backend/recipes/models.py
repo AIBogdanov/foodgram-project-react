@@ -165,7 +165,7 @@ class Recipe(Model):
         )
 
     def __str__(self) -> str:
-        return f'{self.name}. Автор: {self.author.username}'
+        return f'{self.name}'
 
 
 class AmountIngredient(Model):
