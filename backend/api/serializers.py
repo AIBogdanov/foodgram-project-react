@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db.models import F
 
-from base64.fields import Base64ImageField
+from .mixins import Base64ImageField
 
 
 from recipes.models import Ingredient, Recipe, Tag

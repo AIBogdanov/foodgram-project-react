@@ -42,19 +42,23 @@ class AddDelViewMixin:
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(status=HTTP_400_BAD_REQUEST)
 
+from drf_base64.fields import Base64FieldMixin
+import imghdr
+from django.db.models import ImageField
 
-# class Base64ImageField(Base64FieldMixin, ImageField):
 
-#     ALLOWED_TYPES = (
-#         "jpeg",
-#         "jpg",
-#         "png",
-#         "gif"
-#     )
-#     INVALID_FILE_MESSAGE = _("Please upload a valid image.")
-#     INVALID_TYPE_MESSAGE = _("The type of the image couldn't be determined.")
+class Base64ImageField(Base64FieldMixin, ImageField):
 
-#     def get_file_extension(self, filename, decoded_file):
-#         extension = imghdr.what(filename, decoded_file)
-#         extension = "jpg" if extension == "jpeg" else extension
-#         return extension
+    ALLOWED_TYPES = (
+        "jpeg",
+        "jpg",
+        "png",
+        "gif"
+    )
+    INVALID_FILE_MESSAGE = ("Что-то не то!")
+    INVALID_TYPE_MESSAGE = ("The type of the image couldn't be determined.")
+
+    def get_file_extension(self, filename, decoded_file):
+        extension = imghdr.what(filename, decoded_file)
+        extension = "jpg" if extension == "jpeg" else extension
+        return extension
