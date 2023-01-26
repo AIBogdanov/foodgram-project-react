@@ -43,18 +43,18 @@ class AddDelViewMixin:
         return Response(status=HTTP_400_BAD_REQUEST)
 
 
-class Base64ImageField(Base64FieldMixin, ImageField):
+# class Base64ImageField(Base64FieldMixin, ImageField):
 
-    ALLOWED_TYPES = (
-        "jpeg",
-        "jpg",
-        "png",
-        "gif"
-    )
-    INVALID_FILE_MESSAGE = _("Please upload a valid image.")
-    INVALID_TYPE_MESSAGE = _("The type of the image couldn't be determined.")
+#     ALLOWED_TYPES = (
+#         "jpeg",
+#         "jpg",
+#         "png",
+#         "gif"
+#     )
+#     INVALID_FILE_MESSAGE = _("Please upload a valid image.")
+#     INVALID_TYPE_MESSAGE = _("The type of the image couldn't be determined.")
 
-    def get_file_extension(self, filename, decoded_file):
-        extension = imghdr.what(filename, decoded_file)
-        extension = "jpg" if extension == "jpeg" else extension
-        return extension
+#     def get_file_extension(self, filename, decoded_file):
+#         extension = imghdr.what(filename, decoded_file)
+#         extension = "jpg" if extension == "jpeg" else extension
+#         return extension
