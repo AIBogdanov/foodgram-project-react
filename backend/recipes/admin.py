@@ -35,7 +35,7 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image', 'tags.name',
+        'name', 'author', 'get_image', 'tag.name',
         'get_tags',
         'get_is_favorited',
     )
