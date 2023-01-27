@@ -1,5 +1,5 @@
 from django.contrib.admin import (
-    ModelAdmin, StackedInline, register, site, TabularInline
+    display, ModelAdmin, StackedInline, register, site
 )
 from django.contrib.auth import get_user_model
 from django.utils.safestring import mark_safe
@@ -16,17 +16,6 @@ class IngredientInline(StackedInline):
     model = AmountIngredient
     extra = 2
     min_num = 1
-
-
-class MyInline(TabularInline):
-    model = Recipe
-
-    def get_extra(self, request, obj):
-        count = 0
-        for user in User.objects.all():
-            if user.favorites.filter(id=obj.id):
-                count += 1
-        return count
 
 
 @register(Ingredient)
@@ -50,14 +39,13 @@ class RecipeAdmin(ModelAdmin):
         'get_tags',
         'get_is_favorited',
     )
-    fields = ('extra')
     search_fields = (
         'name', 'author', 'tags'
     )
     list_filter = (
         'name', 'author__username', 'tags'
     )
-    inlines = (IngredientInline, MyInline)
+    inlines = (IngredientInline,)
     empty_value_display = EMPTY_VALUE_DISPLAY
 
     def get_image(self, obj):
@@ -69,6 +57,7 @@ class RecipeAdmin(ModelAdmin):
             list.append(tag.name)
         return list
 
+    @display()
     def get_is_favorited(self, obj):
         count = 0
         for user in User.objects.all():
