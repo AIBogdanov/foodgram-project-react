@@ -136,5 +136,3 @@ USE_TZ = True
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# PASSWORD_RESET_TIMEOUT = 60 * 60
