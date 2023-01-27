@@ -37,7 +37,7 @@ class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image',
         'get_tags',
-        'get_is_favorited',
+        'is_favorited',
     )
     search_fields = (
         'name', 'author', 'tags'
