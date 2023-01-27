@@ -21,7 +21,7 @@ class IngredientInline(StackedInline):
 class MyInline(TabularInline):
     model = Recipe
 
-    def get_extra(self, obj):
+    def get_extra(self, request, obj):
         count = 0
         for user in User.objects.all():
             if user.favorites.filter(id=obj.id):
