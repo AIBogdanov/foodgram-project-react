@@ -18,6 +18,19 @@ class IngredientInline(StackedInline):
     min_num = 1
 
 
+class FavoriteInline(StackedInline):
+    fields = (
+       'get_is_favorited'
+    )
+
+    def get_is_favorited(self, obj):
+        count = 0
+        for user in User.objects.all():
+            if user.favorites.filter(id=obj.id):
+                count += 1
+        return count
+
+
 @register(Ingredient)
 class IngredientAdmin(ModelAdmin):
     list_display = (
@@ -37,7 +50,7 @@ class RecipeAdmin(ModelAdmin):
     list_display = (
         'name', 'author', 'get_image',
         'get_tags',
-        'is_favorited',
+        'get_is_favorited',
     )
     search_fields = (
         'name', 'author', 'tags'
@@ -45,7 +58,7 @@ class RecipeAdmin(ModelAdmin):
     list_filter = (
         'name', 'author__username', 'tags'
     )
-    inlines = (IngredientInline,)
+    inlines = (IngredientInline, FavoriteInline)
     empty_value_display = EMPTY_VALUE_DISPLAY
 
     def get_image(self, obj):
@@ -57,8 +70,7 @@ class RecipeAdmin(ModelAdmin):
             list.append(tag.name)
         return list
 
-    @display()
-    def is_favorited(self, obj):
+    def get_is_favorited(self, obj):
         count = 0
         for user in User.objects.all():
             if user.favorites.filter(id=obj.id):
@@ -67,7 +79,7 @@ class RecipeAdmin(ModelAdmin):
 
     get_tags.short_description = 'Теги'
     get_image.short_description = 'Изображение'
-    is_favorited.short_description = 'Число добавлений в избранное'
+    get_is_favorited.short_description = 'Число добавлений в избранное'
 
 
 
