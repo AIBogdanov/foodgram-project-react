@@ -41,16 +41,17 @@ class RecipeAdmin(ModelAdmin):
     )
     fields = (
         'name',
-        'author',
-        'favorite',
-        'tags',
-        'cart',
-        'pub_date',
-        'image',
+        ('author', 'tags',),
         'text',
         'cooking_time',
-        )
-    readonly_fields = ('pub_date',)
+        ('image', 'get_image',),
+        ('favorite', 'get_is_favorited',),
+        'cart',
+        'pub_date',
+    )
+    readonly_fields = (
+        'pub_date', 'get_image', 'get_is_favorited'
+    )
     search_fields = (
         'name', 'author', 'tags'
     )
