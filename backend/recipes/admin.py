@@ -50,6 +50,7 @@ class RecipeAdmin(ModelAdmin):
         'get_tags',
         'get_is_favorited',
     )
+    fields = ('extra')
     search_fields = (
         'name', 'author', 'tags'
     )
