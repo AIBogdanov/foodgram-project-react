@@ -44,7 +44,6 @@ class RecipeAdmin(ModelAdmin):
         'author',
         'favorite',
         'tags',
-        'ingredients',
         'cart',
         'pub_date',
         'image',
