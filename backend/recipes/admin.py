@@ -40,6 +40,18 @@ class RecipeAdmin(ModelAdmin):
         'get_tags',
         'get_is_favorited',
     )
+    fields = (
+            'id',
+            'tags',
+            'author',
+            'ingredients',
+            'is_favorited',
+            'is_in_shopping_cart',
+            'name',
+            'image',
+            'text',
+            'cooking_time',
+        )
     search_fields = (
         'name', 'author', 'tags'
     )

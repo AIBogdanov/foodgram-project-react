@@ -47,15 +47,12 @@ class AddDelViewMixin:
 
 
 class Base64ImageField(Base64FieldMixin, ImageField):
-
     ALLOWED_TYPES = (
         "jpeg",
         "jpg",
         "png",
         "gif"
     )
-    # INVALID_FILE_MESSAGE = ("Что-то не то!")
-    # INVALID_TYPE_MESSAGE = ("The type of the image couldn't be determined.")
 
     def get_file_extension(self, filename, decoded_file):
         extension = imghdr.what(filename, decoded_file)
