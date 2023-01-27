@@ -67,7 +67,7 @@ class RecipeAdmin(ModelAdmin):
 
     get_tags.short_description = 'Теги'
     get_image.short_description = 'Изображение'
-    get_is_favorited.short_description = 'Число добавлений в избранное'
+    is_favorited.short_description = 'Число добавлений в избранное'
 
 
 
