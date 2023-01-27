@@ -30,6 +30,9 @@ class FavoriteInline(StackedInline):
                 count += 1
         return count
 
+    class Meta:
+        verbose_name = 'Количество добавлений в избранное.'
+
 
 @register(Ingredient)
 class IngredientAdmin(ModelAdmin):
