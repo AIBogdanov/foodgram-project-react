@@ -41,12 +41,11 @@ class RecipeAdmin(ModelAdmin):
         'get_is_favorited',
     )
     fields = (
-            'id',
             'tags',
             'author',
             'ingredients',
-            # 'favorite',
-            # 'cart',
+            'favorite',
+            'cart',
             'name',
             'image',
             'text',
