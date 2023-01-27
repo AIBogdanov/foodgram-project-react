@@ -18,22 +18,6 @@ class IngredientInline(StackedInline):
     min_num = 1
 
 
-class FavoriteInline(StackedInline):
-    fields = (
-       'get_is_favorited'
-    )
-
-    def get_is_favorited(self, obj):
-        count = 0
-        for user in User.objects.all():
-            if user.favorites.filter(id=obj.id):
-                count += 1
-        return count
-
-    class Meta:
-        verbose_name = 'Количество добавлений в избранное.'
-
-
 @register(Ingredient)
 class IngredientAdmin(ModelAdmin):
     list_display = (
@@ -55,13 +39,26 @@ class RecipeAdmin(ModelAdmin):
         'get_tags',
         'get_is_favorited',
     )
+    fields = (
+        'name',
+        'author',
+        'favorite',
+        'tags',
+        'ingredients',
+        'cart',
+        'pub_date',
+        'image',
+        'text',
+        'cooking_time',
+        )
+    readonly_fields = ('pub_date',)
     search_fields = (
         'name', 'author', 'tags'
     )
     list_filter = (
         'name', 'author__username', 'tags'
     )
-    inlines = (IngredientInline, FavoriteInline)
+    inlines = (IngredientInline,)
     empty_value_display = EMPTY_VALUE_DISPLAY
 
     def get_image(self, obj):
