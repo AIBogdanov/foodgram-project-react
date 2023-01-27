@@ -42,9 +42,9 @@ class RecipeAdmin(ModelAdmin):
     fields = (
         'name',
         ('author', 'tags',),
-        'text',
         'cooking_time',
         ('image', 'get_image',),
+        'text',
         ('favorite', 'get_is_favorited',),
         'cart',
         'pub_date',
@@ -53,7 +53,7 @@ class RecipeAdmin(ModelAdmin):
         'pub_date', 'get_image', 'get_is_favorited'
     )
     search_fields = (
-        'name', 'author', 'tags'
+        'name', 'author',
     )
     list_filter = (
         'name', 'author__username', 'tags'
