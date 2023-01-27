@@ -58,7 +58,7 @@ class RecipeAdmin(ModelAdmin):
         return list
 
     @display()
-    def get_is_favorited(self, obj):
+    def is_favorited(self, obj):
         count = 0
         for user in User.objects.all():
             if user.favorites.filter(id=obj.id):
